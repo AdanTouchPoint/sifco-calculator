@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './calculatorsteps.css';
 import { useCalculatorStore } from './../lib/useCalculatorStore';
 export const StepOne: React.FC = () => {
