@@ -1,7 +1,8 @@
 import React from 'react';
-import './welcome.css'; // Importación directa de CSS tradicional
-
+import './welcome.css';
+import { useCalculatorStore } from './../lib/useCalculatorStore';
 export const Welcome: React.FC = () => {
+    const { nextStep } = useCalculatorStore();
     return (
         <div className="sifco-page-wrapper">
 
@@ -40,7 +41,7 @@ export const Welcome: React.FC = () => {
                             En menos de 3 minutos calcula tu ROI potencial y visualiza cuánto podrías recuperar con{' '}
                             <strong>B1Lending — Colocación + Recuperación</strong>
                         </p>
-                        <button className="sifco-btn sifco-btn-primary">
+                        <button onClick={nextStep} className="sifco-btn sifco-btn-primary">
                             <span>Calcular ahora</span>
                             <i className="sifco-arrow-icon"></i>
                         </button>

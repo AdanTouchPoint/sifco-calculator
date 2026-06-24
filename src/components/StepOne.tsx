@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import './calculatorsteps.css';
-
+import { useCalculatorStore } from './../lib/useCalculatorStore';
 export const StepOne: React.FC = () => {
-    // Estados para manejar los inputs del paso 1
-    const [solicitudes, setSolicitudes] = useState<number>(400);
-    const [porcentaje, setPorcentaje] = useState<number>(40);
-    const [monto, setMonto] = useState<string>('5,000');
+    // 2. Te suscribes a los datos que te interesan de este paso
+    const solicitudesMes = useCalculatorStore((state) => state.solicitudesMes);
+    const porcentajeAprobado = useCalculatorStore((state) => state.porcentajeAprobado);
+    const montoTicket = useCalculatorStore((state) => state.montoTicket);
+    const setFieldValue = useCalculatorStore((state) => state.setFieldValue);
+
+    // 3. Traes el control de navegación
+    const nextStep = useCalculatorStore((state) => state.nextStep);
+    const prevStep = useCalculatorStore((state) => state.prevStep);
 
     return (
         <div className="sifco-step-wrapper">
@@ -39,8 +44,8 @@ export const StepOne: React.FC = () => {
                         <input
                             type="number"
                             className="sifco-step-input-text"
-                            value={solicitudes}
-                            onChange={(e) => setSolicitudes(Number(e.target.value))}
+                            value={solicitudesMes}
+                            onChange={(e) => setFieldValue("solicitudesMes", Number(e.target.value))}
                         />
                         <span className="sifco-step-input-help">+ Promedio regional: 300-500 solicitudes/mes</span>
                     </div>
@@ -53,19 +58,19 @@ export const StepOne: React.FC = () => {
                             {/* Tooltip flotante con el valor actual */}
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${porcentaje}% - 20px)` }}
+                                style={{ left: `calc(${porcentajeAprobado}% - 20px)` }}
                             >
-                                {porcentaje}%
+                                {porcentajeAprobado}%
                             </div>
                             <input
                                 type="range"
                                 min="0"
                                 max="100"
                                 className="sifco-step-input-range"
-                                value={porcentaje}
-                                onChange={(e) => setPorcentaje(Number(e.target.value))}
+                                value={porcentajeAprobado}
+                                onChange={(e) => setFieldValue("porcentajeAprobado", Number(e.target.value))}
                                 style={{
-                                    background: `linear-gradient(to right, #76BC21 0%, #76BC21 ${porcentaje}%, #e2e8f0 ${porcentaje}%, #e2e8f0 100%)`
+                                    background: `linear-gradient(to right, #76BC21 0%, #76BC21 ${porcentajeAprobado}%, #e2e8f0 ${porcentajeAprobado}%, #e2e8f0 100%)`
                                 }}
                             />
                         </div>
@@ -81,8 +86,8 @@ export const StepOne: React.FC = () => {
                             <input
                                 type="text"
                                 className="sifco-step-input-text sifco-step-input-currency"
-                                value={monto}
-                                onChange={(e) => setMonto(e.target.value)}
+                                value={montoTicket}
+                                onChange={(e) => setFieldValue("montoTicket", Number(e.target.value))}
                             />
                         </div>
                         <span className="sifco-step-input-help">+ Micro: $500-$3K / Consumo: $3K-$15K / Empresarial: $15K+</span>
@@ -90,10 +95,10 @@ export const StepOne: React.FC = () => {
 
                     {/* BOTONES DE NAVEGACIÓN */}
                     <div className="sifco-step-navigation">
-                        <button type="button" className="sifco-step-btn sifco-step-btn-back">
+                        <button onClick={prevStep} type="button" className="sifco-step-btn sifco-step-btn-back">
                             ← Inicio
                         </button>
-                        <button type="button" className="sifco-step-btn sifco-step-btn-next">
+                        <button onClick={nextStep} type="button" className="sifco-step-btn sifco-step-btn-next">
                             <span>Siguiente</span>
                             <i className="sifco-step-arrow"></i>
                         </button>

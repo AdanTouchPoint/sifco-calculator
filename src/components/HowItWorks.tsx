@@ -1,7 +1,9 @@
 import React from 'react';
 import './howitworks.css';
+import { useCalculatorStore } from './../lib/useCalculatorStore';
 
 export const HowItWorks: React.FC = () => {
+  const { nextStep } = useCalculatorStore();
   return (
     <div className="sifco-how-wrapper">
 
@@ -123,7 +125,7 @@ export const HowItWorks: React.FC = () => {
 
       {/* BOTÓN INICIAR */}
       <div className="sifco-how-footer">
-        <button className="sifco-how-btn-start">
+        <button onClick={nextStep} className="sifco-how-btn-start">
           <span>Iniciar Ahora</span>
           <i className="sifco-how-arrow"></i>
         </button>
