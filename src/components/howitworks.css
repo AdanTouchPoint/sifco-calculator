@@ -1,0 +1,334 @@
+/* --- CONFIGURACIÓN Y VARIABLES --- */
+.sifco-how-wrapper {
+    --color-brand-green: #63A61D;
+    --color-step-orange: #FFB84D;
+    --color-step-green: #76BC21;
+    --color-text-dark: #1A3020;
+
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    width: 100%;
+    background-color: #F8F9FA;
+    /* Fondo grisáceo muy claro sutil */
+    padding: 60px 20px;
+    box-sizing: border-box;
+    color: var(--color-text-dark);
+}
+
+.sifco-how-wrapper * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- TÍTULOS --- */
+.sifco-how-header {
+    text-align: center;
+    max-width: 850px;
+    margin: 0 auto 50px auto;
+}
+
+.sifco-how-main-title {
+    color: var(--color-brand-green);
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.sifco-how-subtitle {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+/* --- SECCIÓN PASOS --- */
+.sifco-how-steps-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.sifco-how-group {
+    position: relative;
+    border-top: 1px transparent solid;
+    /* Espaciador estructural */
+}
+
+/* Badges superiores que encapsulan los pasos */
+.sifco-how-group-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+}
+
+.sifco-how-badge-orange {
+    border: 1px solid var(--color-step-orange);
+    color: #c27d13;
+    background-color: #fffbeb;
+}
+
+.sifco-how-badge-green {
+    border: 1px solid var(--color-step-green);
+    color: #3b6e12;
+    background-color: #f4fbc8;
+}
+
+/* Grids responsivos */
+.sifco-how-grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+.sifco-how-group-recovery {
+    max-width: 75%;
+    /* Alineación visual aproximada al diseño de los pasos 6-8 */
+    margin-left: 25%;
+}
+
+.sifco-how-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+/* Estilos de Tarjeta Individual */
+.sifco-how-step-card {
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 24px 16px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.sifco-how-card-orange {
+    border: 1.5px solid var(--color-step-orange);
+}
+
+.sifco-how-card-green {
+    border: 1.5px solid var(--color-step-green);
+}
+
+.sifco-how-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.text-orange {
+    color: var(--color-step-orange);
+}
+
+.text-green {
+    color: #559114;
+}
+
+.sifco-how-card-desc {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* Indicadores de número (círculos abajo a la derecha) */
+.sifco-how-card-num {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.bg-orange {
+    background-color: var(--color-step-orange);
+}
+
+.bg-green {
+    background-color: var(--color-step-green);
+}
+
+.bg-green-solid {
+    background-color: #3b6e12;
+}
+
+/* --- SECCIÓN SUMATORIA DIAGNÓSTICOS --- */
+.sifco-how-summary-section {
+    max-width: 1200px;
+    margin: 60px auto 40px auto;
+}
+
+.sifco-how-summary-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sifco-how-block-summary {
+    flex: 1;
+    padding: 40px 24px;
+    border-radius: 16px;
+    text-align: center;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+}
+
+.bg-block-orange {
+    background-color: #FFB84D;
+    color: white;
+}
+
+.bg-block-green {
+    background-color: #4C9E07;
+    color: white;
+}
+
+.bg-block-white {
+    background-color: #ffffff;
+    border: 1px solid #f1f5f9;
+}
+
+.sifco-how-block-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.text-green-dark {
+    color: #4C9E07;
+}
+
+.sifco-how-block-desc {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.text-gray {
+    color: #64748b;
+}
+
+.sifco-how-operator {
+    font-size: 2rem;
+    font-weight: 400;
+    color: #4C9E07;
+    padding: 0 10px;
+}
+
+/* --- BOTÓN INICIAR --- */
+.sifco-how-footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.sifco-how-btn-start {
+    background-color: var(--color-step-orange);
+    color: var(--color-text-dark);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 16px 44px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 16px rgba(255, 184, 77, 0.3);
+    transition: all 0.2s ease;
+}
+
+.sifco-how-btn-start:hover {
+    background-color: #ffa826;
+    transform: translateY(-2px);
+}
+
+/* Flecha CSS pura */
+.sifco-how-arrow {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-top: 2.5px solid var(--color-text-dark);
+    border-right: 2.5px solid var(--color-text-dark);
+    transform: rotate(45deg);
+    position: relative;
+}
+
+.sifco-how-arrow::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 2.5px;
+    background-color: var(--color-text-dark);
+    transform: rotate(-45deg);
+    top: 2.5px;
+    right: -2px;
+}
+
+/* --- RESPONSIVIDAD (MEDIA QUERIES) --- */
+@media (max-width: 1024px) {
+    .sifco-how-grid-5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .sifco-how-group-recovery {
+        max-width: 100%;
+        margin-left: 0;
+    }
+
+    .sifco-how-summary-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sifco-how-operator {
+        transform: rotate(90deg);
+        padding: 10px 0;
+    }
+
+    .sifco-how-block-summary {
+        width: 100%;
+        min-height: auto;
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .sifco-how-grid-5,
+    .sifco-how-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sifco-how-main-title {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .sifco-how-grid-5,
+    .sifco-how-grid-3 {
+        grid-template-columns: 1fr;
+    }
+}

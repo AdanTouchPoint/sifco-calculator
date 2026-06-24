@@ -1,0 +1,289 @@
+/* --- VARIABLES Y CONFIGURACIÓN --- */
+.sifco-step-wrapper {
+    --sifco-green-primary: #76BC21;
+    --sifco-green-dark: #0A2214;
+    --sifco-accent-yellow: #FFB84D;
+    --sifco-accent-hover: #ffa826;
+    --sifco-text-gray: #64748b;
+    --sifco-bg-input: #f8fafc;
+    --sifco-border-color: #e2e8f0;
+
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+.sifco-step-wrapper * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- CONTENEDOR CENTRAL --- */
+.sifco-step-container {
+    width: 100%;
+    max-width: 850px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Badge de Categoría Superior */
+.sifco-step-badge-category {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4C9E07;
+    border: 1px solid var(--sifco-green-primary);
+    background-color: #f4fbc8;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+}
+
+/* Títulos */
+.sifco-step-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--sifco-green-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+}
+
+.sifco-step-progress-text {
+    font-size: 0.9rem;
+    color: var(--sifco-text-gray);
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+/* Barra de progreso general */
+.sifco-step-progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.sifco-step-progress-bar-fill {
+    height: 100%;
+    background-color: var(--sifco-green-dark);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+/* Mensaje de Benchmark en verde */
+.sifco-step-notice {
+    color: var(--sifco-green-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+/* --- FORMULARIO E INPUTS --- */
+.sifco-step-form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.sifco-step-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sifco-step-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--sifco-green-dark);
+}
+
+.sifco-step-input-text {
+    width: 100%;
+    background-color: var(--sifco-bg-input);
+    border: 1px solid var(--sifco-border-color);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--sifco-green-dark);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.sifco-step-input-text:focus {
+    border-color: var(--sifco-green-primary);
+    background-color: #ffffff;
+}
+
+.sifco-step-input-help {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* Input con Símbolo de Dinero */
+.sifco-step-currency-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.sifco-step-currency-symbol {
+    position: absolute;
+    left: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--sifco-green-dark);
+    pointer-events: none;
+}
+
+.sifco-step-input-currency {
+    padding-left: 32px;
+    /* Espacio para que el texto no pise el '$' */
+}
+
+/* --- CONTROL RANGO / SLIDER --- */
+.sifco-step-slider-container {
+    position: relative;
+    width: 100%;
+    padding-top: 35px;
+    /* Espacio para el globo flotante */
+    margin-bottom: 8px;
+}
+
+/* Globo indicador de valor */
+.sifco-step-slider-tooltip {
+    position: absolute;
+    top: 0;
+    background-color: var(--sifco-bg-input);
+    border: 1px solid var(--sifco-border-color);
+    color: var(--sifco-green-dark);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    transition: left 0.05s ease-out;
+}
+
+.sifco-step-input-range {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Estilos nativos del trackball/indicador redondo del slider */
+.sifco-step-input-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 4px solid var(--sifco-green-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.sifco-step-input-range::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 4px solid var(--sifco-green-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* --- BOTONES DE NAVEGACIÓN --- */
+.sifco-step-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 40px;
+}
+
+.sifco-step-btn {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    padding: 14px 36px;
+    transition: all 0.2s ease;
+}
+
+.sifco-step-btn-back {
+    background-color: #e2e8f0;
+    color: var(--sifco-green-dark);
+}
+
+.sifco-step-btn-back:hover {
+    background-color: #cbd5e1;
+}
+
+.sifco-step-btn-next {
+    background-color: var(--sifco-accent-yellow);
+    color: var(--sifco-green-dark);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sifco-step-btn-next:hover {
+    background-color: var(--sifco-accent-hover);
+}
+
+/* Flecha del botón siguiente con CSS puro */
+.sifco-step-arrow {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-top: 2.5px solid var(--sifco-green-dark);
+    border-right: 2.5px solid var(--sifco-green-dark);
+    transform: rotate(45deg);
+    position: relative;
+}
+
+.sifco-step-arrow::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 2.5px;
+    background-color: var(--sifco-green-dark);
+    transform: rotate(-45deg);
+    top: 2.5px;
+    right: -2px;
+}
+
+/* --- RESPONSIVIDAD --- */
+@media (max-width: 600px) {
+    .sifco-step-title {
+        font-size: 1.75rem;
+    }
+
+    .sifco-step-navigation {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .sifco-step-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
