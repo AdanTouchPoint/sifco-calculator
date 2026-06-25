@@ -37,9 +37,10 @@ interface CalculatorState {
     porcentajeErroresAplicacion: number;
     porcentajeWriteOffAnual: number;
 
-    setFieldValue: (field: keyof Omit<CalculatorState, 'setFieldValue' | 'nextStep' | 'prevStep' | 'currentStep'>, value: number) => void;
+    setFieldValue: (field: keyof Omit<CalculatorState, 'setFieldValue' | 'nextStep' | 'prevStep' | 'currentStep' | 'resetCalculator'>, value: number) => void;
     nextStep: () => void;
     prevStep: () => void;
+    resetCalculator: () => void;
 }
 
 export const useCalculatorStore = create<CalculatorState>((set) => ({
@@ -84,4 +85,30 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     prevStep: () => set((state) => ({
         currentStep: state.currentStep > 0 ? state.currentStep - 1 : state.currentStep
     })),
+
+    // Reinicia toda la calculadora a sus valores por defecto
+    resetCalculator: () => set({
+        currentStep: 0,
+        solicitudesMes: 400,
+        porcentajeAprobado: 40,
+        montoTicket: 5000,
+        tiempoAprobacion: 5,
+        tiempoDesembolso: 3,
+        numAnalistas: 6,
+        salarioAnalista: 800,
+        horasLaboralesMes: 160,
+        porcentajeAbandono: 20,
+        porcentajeReprocesos: 25,
+        porcentajeManual: 70,
+        sistemasActuales: '2-3 sistemas',
+        saldoCarteraActiva: 500000,
+        porcentajeMoraNPL: 10,
+        diasAtrasoPromedio: 45,
+        porcentajeRecuperacion: 60,
+        costoMensualCobranza: 2000,
+        porcentajeGestionesManuales: 75,
+        porcentajePagosManuales: 70,
+        porcentajeErroresAplicacion: 5,
+        porcentajeWriteOffAnual: 3,
+    }),
 }));

@@ -10,6 +10,9 @@ import StepFive from './components/StepFive'
 import StepSix from './components/StepSix'
 import StepSeven from './components/StepSeven'
 import StepEight from './components/StepEight'
+import { ColocacionScreen } from './components/ColocacionScreen'
+import { RecuperacionScreen } from './components/RecuperacionScreen'
+import { Resultados } from './components/Resultados'
 function App() {
   const currentStep = useCalculatorStore((state) => state.currentStep);
   return (
@@ -25,6 +28,10 @@ function App() {
         {currentStep === 7 && <StepSix />}
         {currentStep === 8 && <StepSeven />}
         {currentStep === 9 && <StepEight />}
+        {currentStep === 10 && <ColocacionScreen />}
+        <RecuperacionScreen />
+        <Resultados />
+
       </div>
 
     </>

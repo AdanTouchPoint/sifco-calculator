@@ -1,0 +1,223 @@
+.sifco-res-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f7f9f8;
+    /* Simulación de la marca de agua con gradiente o puedes añadir una imagen limpia de fondo */
+    background-image: radial-gradient(circle at bottom left, rgba(220, 235, 225, 0.5) 0%, transparent 40%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.sifco-res-container {
+    width: 100%;
+    max-width: 750px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 45px;
+    text-align: center;
+}
+
+/* FILA DE LA SUMA INICIAL */
+.sifco-res-sum-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.sifco-res-mini-card {
+    background-color: #fbfbfb;
+    border-radius: 14px;
+    padding: 16px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 220px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.sifco-res-mini-label {
+    font-size: 0.85rem;
+    color: #727272;
+    margin-bottom: 4px;
+}
+
+.sifco-res-mini-value-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sifco-res-card-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.sifco-res-mini-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.sifco-res-math-sign {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #55960c;
+}
+
+/* SECCIÓN DEL TOTAL ENORME */
+.sifco-res-total-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.sifco-res-grand-total {
+    font-size: 5.5rem;
+    font-weight: 800;
+    color: #55960c;
+    margin: 0;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+.sifco-res-total-desc {
+    font-size: 1.3rem;
+    color: #616161;
+    max-width: 500px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.sifco-res-meta {
+    font-size: 0.75rem;
+    color: #55960c;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.sifco-res-divider {
+    color: #ccc;
+    margin: 0 6px;
+}
+
+/* SECCIÓN DE ACCIONES / BOTONES */
+.sifco-res-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+}
+
+/* Botón Naranja Principal */
+.sifco-res-btn-primary {
+    background-color: #ffb74d;
+    color: #0d3c26;
+    border: none;
+    border-radius: 30px;
+    padding: 16px 48px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255, 183, 77, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.sifco-res-btn-primary:hover {
+    background-color: #ffa726;
+    transform: translateY(-1px);
+}
+
+/* Enlaces Inferiores */
+.sifco-res-links-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 4px;
+}
+
+.sifco-res-link {
+    font-size: 0.85rem;
+    color: #55960c;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.sifco-res-link:hover {
+    color: #3b6b06;
+}
+
+/* Botón Recalcular Verde Inferior */
+.sifco-res-btn-recalc {
+    background-color: #55960c;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    transition: background-color 0.2s;
+}
+
+.sifco-res-btn-recalc:hover {
+    background-color: #43750a;
+}
+
+.sifco-res-arrow {
+    font-size: 0.85rem;
+}
+
+/* VARIANTES DE BORDES Y COLORES */
+.border-green {
+    border: 2px solid #55960c;
+}
+
+.border-amber {
+    border: 2px solid #ffb300;
+}
+
+.color-green {
+    color: #55960c;
+}
+
+.color-amber {
+    color: #ffb300;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .sifco-res-sum-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sifco-res-math-sign {
+        transform: rotate(90deg);
+        margin: -4px 0;
+    }
+
+    .sifco-res-grand-total {
+        font-size: 3.8rem;
+    }
+
+    .sifco-res-total-desc {
+        font-size: 1.1rem;
+    }
+
+    .sifco-res-links-row {
+        flex-direction: column;
+        gap: 14px;
+    }
+}

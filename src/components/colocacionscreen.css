@@ -1,0 +1,250 @@
+.sifco-diag-wrapper {
+    width: 100%;
+    background-color: #ffffff;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* HERO HEADER DE image_f83e3f.png */
+.sifco-diag-hero {
+    width: 100%;
+    background: linear-gradient(135deg, #072e1c 0%, #115c36 100%);
+    padding: 60px 20px 60px 20px;
+    text-align: center;
+    color: #ffffff;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.sifco-diag-hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.sifco-diag-hero-tag {
+    font-size: 1rem;
+    color: #a4db74;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.sifco-diag-hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.5px;
+}
+
+.sifco-diag-hero-subtitle {
+    font-size: 1.05rem;
+    color: #e0f2f1;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* CONTENEDOR PRINCIPAL CORREGIDO (ABAJO DEL HERO CON SEPARACIÓN CORRESPONDIENTE) */
+.sifco-diag-container {
+    width: 100%;
+    max-width: 1000px;
+    padding: 50px 20px 60px 20px;
+    /* 50px de separación limpia del header */
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+/* FILAS DE TARJETAS */
+.sifco-diag-top-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.sifco-diag-bottom-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+/* COMPARTIDO TARJETAS */
+.sifco-diag-big-card,
+.sifco-diag-metric-card {
+    background-color: #fbfbfb;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* TARJETAS TOP */
+.sifco-diag-big-card {
+    gap: 8px;
+}
+
+.sifco-diag-big-label {
+    font-size: 0.9rem;
+    color: #727272;
+}
+
+.sifco-diag-big-value-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sifco-diag-card-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.sifco-diag-big-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+/* TARJETAS METRICAS BOTTOM */
+.sifco-diag-metric-card {
+    gap: 12px;
+}
+
+.sifco-diag-metric-label {
+    font-size: 0.8rem;
+    color: #727272;
+}
+
+.sifco-diag-metric-value {
+    font-size: 2.4rem;
+    font-weight: 700;
+    border-bottom: 1px solid #eef0f2;
+    padding-bottom: 12px;
+}
+
+.sifco-diag-metric-desc {
+    font-size: 0.85rem;
+    color: #616161;
+    line-height: 1.4;
+}
+
+/* SECCIÓN TABLA */
+.sifco-diag-table-section {
+    margin-top: 20px;
+}
+
+.sifco-diag-table-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0d3c26;
+    margin-bottom: 24px;
+}
+
+.sifco-diag-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.sifco-diag-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.sifco-diag-table th {
+    background-color: #55960c;
+    color: #ffffff;
+    padding: 14px 20px;
+    font-weight: 600;
+}
+
+.sifco-diag-table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.sifco-diag-table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.sifco-diag-table td {
+    padding: 16px 20px;
+    color: #424242;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.sifco-diag-disclaimer {
+    font-size: 0.75rem;
+    color: #7bb11a;
+    margin-top: 16px;
+    font-weight: 500;
+}
+
+/* VARIANTES DE BORDES Y COLORES */
+.border-pink {
+    border: 2px solid #e91e63;
+}
+
+.border-amber {
+    border: 2px solid #ffb300;
+}
+
+.border-green {
+    border: 2px solid #55960c;
+}
+
+.color-pink {
+    color: #e91e63;
+}
+
+.color-amber {
+    color: #ffb300;
+}
+
+.color-green {
+    color: #55960c;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+/* BOTÓN INFERIOR */
+.sifco-diag-footer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.sifco-diag-btn-back {
+    background: none;
+    border: none;
+    color: #727272;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0;
+}
+
+.sifco-diag-btn-back:hover {
+    color: #000000;
+    text-decoration: underline;
+}
+
+/* RESPONSIVE */
+@media (max-width: 850px) {
+
+    .sifco-diag-top-cards,
+    .sifco-diag-bottom-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .sifco-diag-hero-title {
+        font-size: 2rem;
+    }
+}
