@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
-import './CalculatorSteps.css';
+import './calculatorsteps.css';
 
 export const StepThree: React.FC = () => {
     const numAnalistas = useCalculatorStore((state) => state.numAnalistas);
