@@ -29,8 +29,8 @@ function App() {
         {currentStep === 8 && <StepSeven />}
         {currentStep === 9 && <StepEight />}
         {currentStep === 10 && <ColocacionScreen />}
-        <RecuperacionScreen />
-        <Resultados />
+        {currentStep === 11 && <RecuperacionScreen />}
+        {currentStep === 12 && <Resultados />}
 
       </div>
 
