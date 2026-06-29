@@ -44,7 +44,7 @@ export const StepTwo: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${(tiempoAprobacion / 15) * 100}% - 20px)` }} // Proporcional si el máximo es 15 días
+                                style={{ left: `${(tiempoAprobacion / 15) * 100}%` }}
                             >
                                 {tiempoAprobacion} días
                             </div>
@@ -70,14 +70,14 @@ export const StepTwo: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${(tiempoDesembolso / 10) * 100}% - 20px)` }} // Proporcional si el máximo es 10 días
+                                style={{ left: `${(tiempoDesembolso / 10) * 100}%` }}
                             >
                                 {tiempoDesembolso} días
                             </div>
                             <input
                                 type="range"
                                 min="0"
-                                max="100"
+                                max="10"
                                 className="sifco-step-input-range"
                                 value={tiempoDesembolso}
                                 onChange={(e) => setFieldValue('tiempoDesembolso', Number(e.target.value))}

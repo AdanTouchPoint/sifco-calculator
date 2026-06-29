@@ -72,7 +72,7 @@ export const StepThree: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${(horasLaboralesMes / 200) * 100}% - 20px)` }} // Base máxima estimada de 200h para el slider
+                                style={{ left: `${(horasLaboralesMes / 200) * 100}%` }}
                             >
                                 {horasLaboralesMes} h
                             </div>

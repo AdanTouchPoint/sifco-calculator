@@ -44,7 +44,7 @@ export const StepFour: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${porcentajeAbandono}% - 20px)` }}
+                                style={{ left: `${porcentajeAbandono}%` }}
                             >
                                 {porcentajeAbandono}%
                             </div>
@@ -70,7 +70,7 @@ export const StepFour: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${porcentajeReprocesos}% - 20px)` }}
+                                style={{ left: `${porcentajeReprocesos}%` }}
                             >
                                 {porcentajeReprocesos}%
                             </div>

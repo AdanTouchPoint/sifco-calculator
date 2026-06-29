@@ -45,7 +45,7 @@ export const StepFive: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${porcentajeManual}% - 20px)` }}
+                                style={{ left: `${porcentajeManual}%` }}
                             >
                                 {porcentajeManual}%
                             </div>

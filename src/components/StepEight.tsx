@@ -46,7 +46,7 @@ export const StepPayments: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${porcentajePagosManuales}% - 20px)` }}
+                                style={{ left: `${porcentajePagosManuales}%` }}
                             >
                                 {porcentajePagosManuales}%
                             </div>
@@ -72,7 +72,7 @@ export const StepPayments: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${(porcentajeErroresAplicacion / 30) * 100}% - 20px)` }} // Escala máx de visualización estimada al 30%
+                                style={{ left: `${(porcentajeErroresAplicacion / 30) * 100}%` }} // Escala máx de visualización estimada al 30%
                             >
                                 {porcentajeErroresAplicacion}%
                             </div>
@@ -98,7 +98,7 @@ export const StepPayments: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${(porcentajeWriteOffAnual / 20) * 100}% - 20px)` }} // Escala máx de visualización estimada al 20%
+                                style={{ left: `${(porcentajeWriteOffAnual / 20) * 100}%` }} // Escala máx de visualización estimada al 20%
                             >
                                 {porcentajeWriteOffAnual}%
                             </div>

@@ -1,18 +1,8 @@
 /* --- CONFIGURACIÓN BASE Y VARIABLES --- */
 .sifco-page-wrapper {
-    --sifco-bg: #ffffff;
-    --sifco-primary-dark: #0A2214;
-    --sifco-gradient-start: #123E24;
-    --sifco-gradient-end: #0A2214;
-    --sifco-green-light: #76BC21;
-    --sifco-green-text: #63A61D;
-    --sifco-accent: #FFB84D;
-    --sifco-accent-hover: #ffa826;
-
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: var(--sifco-bg);
-    color: var(--sifco-primary-dark);
-    min-height: 100vh;
+    font-family: var(--sifco-font, 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif);
+    background-color: #ffffff;
+    color: var(--sifco-green-dark, #0A2214);
     width: 100%;
     box-sizing: border-box;
 }
@@ -25,7 +15,7 @@
 
 /* --- BOTONES E ICONOS --- */
 .sifco-btn {
-    font-family: inherit;
+    font-family: var(--sifco-font, inherit);
     font-weight: 600;
     border: none;
     border-radius: 50px;
@@ -34,19 +24,19 @@
 }
 
 .sifco-btn-secondary {
-    background-color: var(--sifco-accent);
-    color: var(--sifco-primary-dark);
+    background-color: var(--sifco-accent, #FFB84D);
+    color: var(--sifco-green-dark, #0A2214);
     padding: 10px 24px;
     font-size: 0.875rem;
 }
 
 .sifco-btn-secondary:hover {
-    background-color: var(--sifco-accent-hover);
+    background-color: var(--sifco-accent-hover, #ffa826);
 }
 
 .sifco-btn-primary {
-    background-color: var(--sifco-accent);
-    color: var(--sifco-primary-dark);
+    background-color: var(--sifco-accent, #FFB84D);
+    color: var(--sifco-green-dark, #0A2214);
     padding: 16px 36px;
     font-size: 1rem;
     font-weight: 700;
@@ -57,7 +47,7 @@
 }
 
 .sifco-btn-primary:hover {
-    background-color: var(--sifco-accent-hover);
+    background-color: var(--sifco-accent-hover, #ffa826);
     transform: translateY(-2px);
 }
 
@@ -66,8 +56,8 @@
     display: inline-block;
     width: 10px;
     height: 10px;
-    border-top: 2.5px solid var(--sifco-primary-dark);
-    border-right: 2.5px solid var(--sifco-primary-dark);
+    border-top: 2.5px solid var(--sifco-green-dark, #0A2214);
+    border-right: 2.5px solid var(--sifco-green-dark, #0A2214);
     transform: rotate(45deg);
     margin-left: 2px;
     position: relative;
@@ -78,7 +68,7 @@
     position: absolute;
     width: 12px;
     height: 2.5px;
-    background-color: var(--sifco-primary-dark);
+    background-color: var(--sifco-green-dark, #0A2214);
     transform: rotate(-45deg);
     top: 3px;
     right: -2px;
@@ -92,7 +82,7 @@
 }
 
 .sifco-navbar {
-    background: var(--sifco-bg);
+    background: #ffffff;
     border: 1px solid #f1f5f9;
     border-radius: 100px;
     padding: 12px 24px;
@@ -129,7 +119,7 @@
 }
 
 .sifco-bar-top {
-    background-color: var(--sifco-green-light);
+    background-color: var(--sifco-green-primary, #76BC21);
 }
 
 .sifco-bar-bottom {
@@ -140,6 +130,7 @@
     font-size: 1.5rem;
     font-weight: 900;
     letter-spacing: -0.05em;
+    color: var(--sifco-green-dark, #0A2214);
 }
 
 .sifco-divider {
@@ -162,9 +153,8 @@
 }
 
 .sifco-hero-card {
-    background: linear-gradient(135deg, var(--sifco-gradient-start), var(--sifco-gradient-end));
+    background: linear-gradient(135deg, var(--sifco-green-mid, #123E24), var(--sifco-green-dark, #0A2214));
     border-radius: 24px 24px 100px 24px;
-    /* Corte asimétrico exacto */
     color: #ffffff;
     padding: 90px 24px;
     text-align: center;
@@ -194,7 +184,7 @@
 }
 
 .sifco-badge {
-    color: var(--sifco-green-light);
+    color: var(--sifco-green-primary, #76BC21);
     font-size: 0.875rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -212,7 +202,7 @@
 }
 
 .sifco-text-highlight {
-    color: var(--sifco-green-light);
+    color: var(--sifco-green-primary, #76BC21);
 }
 
 .sifco-hero-description {
@@ -228,12 +218,12 @@
 .sifco-metrics-container {
     max-width: 100%;
     margin: 0 auto;
-    padding: 80px 20px;
+    padding: 60px 20px 80px;
     text-align: center;
 }
 
 .sifco-metrics-title {
-    color: var(--sifco-green-text);
+    color: var(--sifco-green-text, #4C9E07);
     font-size: 1.75rem;
     font-weight: 700;
     line-height: 1.3;
@@ -250,11 +240,11 @@
 }
 
 .sifco-metric-card {
-    background-color: var(--sifco-primary-dark);
+    background-color: var(--sifco-green-dark, #0A2214);
     color: #ffffff;
     padding: 40px 24px;
     border-radius: 16px;
-    height: 190px;
+    min-height: 160px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -263,10 +253,11 @@
 }
 
 .sifco-metric-number {
-    color: var(--sifco-green-light);
+    color: var(--sifco-green-primary, #76BC21);
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 8px;
+    display: block;
 }
 
 .sifco-metric-text {
@@ -282,11 +273,19 @@
     .sifco-metrics-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .sifco-metrics-container {
+        padding: 40px 20px 60px;
+    }
 }
 
 @media (max-width: 768px) {
     .sifco-hero-title {
         font-size: 2rem;
+    }
+
+    .sifco-hero-card {
+        padding: 60px 20px;
     }
 
     .sifco-nav-subtitle,
@@ -297,11 +296,20 @@
 
 @media (max-width: 480px) {
     .sifco-metrics-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
 
     .sifco-hero-card {
-        border-radius: 24px 24px 60px 24px;
-        padding: 60px 16px;
+        border-radius: 16px 16px 40px 16px;
+        padding: 48px 16px;
+    }
+
+    .sifco-hero-title {
+        font-size: 1.65rem;
+    }
+
+    .sifco-metrics-title {
+        font-size: 1.4rem;
     }
 }

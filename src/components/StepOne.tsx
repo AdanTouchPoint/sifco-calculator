@@ -23,7 +23,7 @@ export const StepOne: React.FC = () => {
 
                 {/* TÍTULO PRINCIPAL Y PASO */}
                 <h2 className="sifco-step-title">¿Cuánto mueven tus créditos?</h2>
-                <div className="sifco-step-progress-text">Paso 1 de 8</div>
+                <div className="sifco-step-progress-text">Paso 1 de 8 (13%)</div>
 
                 {/* BARRA DE PROGRESO */}
                 <div className="sifco-step-progress-bar-container">
@@ -58,7 +58,7 @@ export const StepOne: React.FC = () => {
                             {/* Tooltip flotante con el valor actual */}
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `calc(${porcentajeAprobado}% - 20px)` }}
+                                style={{ left: `${porcentajeAprobado}%` }}
                             >
                                 {porcentajeAprobado}%
                             </div>

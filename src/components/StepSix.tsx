@@ -54,7 +54,7 @@ export const StepPortfolio: React.FC = () => {
             <div className="sifco-step-slider-container">
               <div
                 className="sifco-step-slider-tooltip"
-                style={{ left: `calc(${(porcentajeMoraNPL / 50) * 100}% - 20px)` }}
+                style={{ left: `${(porcentajeMoraNPL / 50) * 100}%` }}
               >
                 {porcentajeMoraNPL}%
               </div>
@@ -79,7 +79,7 @@ export const StepPortfolio: React.FC = () => {
             <div className="sifco-step-slider-container">
               <div
                 className="sifco-step-slider-tooltip"
-                style={{ left: `calc(${(diasAtrasoPromedio / 180) * 100}% - 25px)` }}
+                style={{ left: `${(diasAtrasoPromedio / 180) * 100}%` }}
               >
                 {diasAtrasoPromedio} dias
               </div>
