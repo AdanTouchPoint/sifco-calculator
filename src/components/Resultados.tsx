@@ -1,6 +1,8 @@
 import React from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import './resultados.css';
+import RecuperacionScreen from './RecuperacionScreen';
+import ColocacionScreen from './ColocacionScreen';
 
 export const Resultados: React.FC = () => {
     const resetCalculator = useCalculatorStore((state) => state.resetCalculator); // O la función que maneje el regreso al inicio
@@ -8,7 +10,8 @@ export const Resultados: React.FC = () => {
     return (
         <div className="sifco-res-wrapper">
             <div className="sifco-res-container">
-
+                <ColocacionScreen />
+                <RecuperacionScreen />
                 {/* FILA SUPERIOR: SUMA DE TARJETAS */}
                 <div className="sifco-res-sum-row">
 

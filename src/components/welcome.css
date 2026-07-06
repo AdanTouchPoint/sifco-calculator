@@ -78,7 +78,7 @@
 .sifco-header {
     max-width: 100%;
     margin: 0 auto;
-    padding: 16px 20px 0 20px;
+    padding: 20px;
 }
 
 .sifco-navbar {
@@ -148,15 +148,15 @@
 /* --- HERO SECTION --- */
 .sifco-hero-container {
     max-width: 100%;
-    margin: 16px auto 0 auto;
-    padding: 0 20px;
+    margin: 0 auto;
+    padding: 0 0px;
 }
 
 .sifco-hero-card {
     background: linear-gradient(135deg, var(--sifco-green-mid, #123E24), var(--sifco-green-dark, #0A2214));
-    border-radius: 24px 24px 100px 24px;
+    border-radius: 0px 0px 100px;
     color: #ffffff;
-    padding: 90px 24px;
+    padding: 50px 50px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -180,7 +180,7 @@
     position: relative;
     z-index: 10;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 50px auto;
 }
 
 .sifco-badge {
@@ -216,7 +216,7 @@
 
 /* --- METRICS SECTION --- */
 .sifco-metrics-container {
-    max-width: 100%;
+    max-width: 60%;
     margin: 0 auto;
     padding: 60px 20px 80px;
     text-align: center;

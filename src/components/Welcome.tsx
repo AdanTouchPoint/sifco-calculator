@@ -1,35 +1,38 @@
 import React from 'react';
 import './welcome.css';
 import { useCalculatorStore } from './../lib/useCalculatorStore';
+import HowItWorks from './HowItWorks';
 export const Welcome: React.FC = () => {
     const { nextStep } = useCalculatorStore();
     return (
         <div className="sifco-page-wrapper">
 
-            {/* HEADER / NAVBAR */}
-            <header className="sifco-header">
-                <div className="sifco-navbar">
-                    <div className="sifco-nav-left">
-                        {/* Logo SIFCO */}
-                        <div className="sifco-logo-container">
-                            <div className="sifco-logo-icon">
-                                <span className="sifco-bar sifco-bar-top"></span>
-                                <span className="sifco-bar sifco-bar-bottom"></span>
-                            </div>
-                            <span className="sifco-logo-text">SIFCO</span>
-                        </div>
-                        <span className="sifco-divider">|</span>
-                        <span className="sifco-nav-subtitle">Calculadora de ROI</span>
-                    </div>
-                    <button className="sifco-btn sifco-btn-secondary">
-                        Calcular mi ROI
-                    </button>
-                </div>
-            </header>
+
 
             {/* HERO SECTION */}
             <main className="sifco-hero-container">
+
                 <div className="sifco-hero-card">
+                    {/* HEADER / NAVBAR */}
+                    <header className="sifco-header">
+                        <div className="sifco-navbar">
+                            <div className="sifco-nav-left">
+                                {/* Logo SIFCO */}
+                                <div className="sifco-logo-container">
+                                    <div className="sifco-logo-icon">
+                                        <span className="sifco-bar sifco-bar-top"></span>
+                                        <span className="sifco-bar sifco-bar-bottom"></span>
+                                    </div>
+                                    <span className="sifco-logo-text">SIFCO</span>
+                                </div>
+                                <span className="sifco-divider">|</span>
+                                <span className="sifco-nav-subtitle">Calculadora de ROI</span>
+                            </div>
+                            <button className="sifco-btn sifco-btn-secondary">
+                                Calcular mi ROI
+                            </button>
+                        </div>
+                    </header>
                     <div className="sifco-hero-content">
                         <span className="sifco-badge">Herramienta gratuita de diagnóstico</span>
                         <h1 className="sifco-hero-title">
@@ -77,6 +80,9 @@ export const Welcome: React.FC = () => {
                         <p className="sifco-metric-text">Mejora en recuperación</p>
                     </div>
                 </div>
+            </section>
+            <section>
+                <HowItWorks />
             </section>
 
         </div>

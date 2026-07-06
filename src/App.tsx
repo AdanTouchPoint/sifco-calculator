@@ -19,18 +19,19 @@ function App() {
     <>
       <div className='container'>
         {currentStep === 0 && <Welcome />}
-        {currentStep === 1 && <HowItWorks />}
-        {currentStep === 2 && <StepOne />}
-        {currentStep === 3 && <StepTwo />}
-        {currentStep === 4 && <StepThree />}
-        {currentStep === 5 && <StepFour />}
-        {currentStep === 6 && <StepFive />}
-        {currentStep === 7 && <StepSix />}
-        {currentStep === 8 && <StepSeven />}
-        {currentStep === 9 && <StepEight />}
-        {currentStep === 10 && <ColocacionScreen />}
-        {currentStep === 11 && <RecuperacionScreen />}
-        {currentStep === 12 && <Resultados />}
+        {/*currentStep === 1 && <HowItWorks />*/}
+        {currentStep === 1 && <StepOne />}
+        {currentStep === 2 && <StepTwo />}
+        {currentStep === 3 && <StepThree />}
+        {currentStep === 4 && <StepFour />}
+        {currentStep === 5 && <StepFive />}
+        {currentStep === 6 && <StepSix />}
+        {currentStep === 7 && <StepSeven />}
+        {currentStep === 8 && <StepEight />}
+        {currentStep === 9 && <Resultados />}
+        {/*currentStep === 9 && <ColocacionScreen />}
+        {/*currentStep === 10 && <RecuperacionScreen />}*/}
+
 
       </div>
 
