@@ -4,7 +4,7 @@
     width: 100%;
     min-height: 100svh;
     background-color: #ffffff;
-    padding: 40px 20px;
+    padding: 40px 20px 120px; /* Bottom padding ensures content isn't hidden behind the fixed footer */
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -12,13 +12,15 @@
     overflow-y: auto;
 }
 
+/* Contenedor central con altura mínima fija para mantener
+   la sección de preguntas del mismo tamaño en todos los pasos */
+
 .sifco-step-wrapper * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* --- CONTENEDOR CENTRAL --- */
 .sifco-step-container {
     width: 100%;
     max-width: 850px;
@@ -206,11 +208,19 @@
 
 /* --- BOTONES DE NAVEGACIÓN --- */
 .sifco-step-navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-top: 1px solid var(--sifco-border, #e2e8f0);
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 16px;
-    margin-top: 40px;
+    z-index: 100;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .sifco-step-btn {

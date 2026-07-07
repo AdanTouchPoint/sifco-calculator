@@ -187,22 +187,7 @@
     font-size: 0.85rem;
 }
 
-/* VARIANTES DE BORDES Y COLORES */
-.border-green {
-    border: 2px solid var(--sifco-green-text, #4C9E07);
-}
-
-.border-amber {
-    border: 2px solid var(--sifco-amber, #ffb300);
-}
-
-.color-green {
-    color: var(--sifco-green-text, #4C9E07);
-}
-
-.color-amber {
-    color: var(--sifco-amber, #ffb300);
-}
+/* VARIANTES DE BORDES Y COLORES — Definidas en index.css global */
 
 /* RESPONSIVE */
 @media (max-width: 768px) {

@@ -38,7 +38,7 @@
 
 /* --- SECCIÓN PASOS --- */
 .sifco-how-steps-section {
-    max-width: 1200px;
+    max-width: 1700px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -74,7 +74,7 @@
 /* Grids responsivos */
 .sifco-how-grid-5 {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
 }
 
@@ -161,7 +161,7 @@
 
 /* --- SECCIÓN SUMATORIA DIAGNÓSTICOS --- */
 .sifco-how-summary-section {
-    max-width: 1200px;
+    max-width: 1700px;
     margin: 60px auto 40px auto;
 }
 

@@ -54,3 +54,35 @@ body {
 p {
   margin: 0;
 }
+
+/* =============================================
+   Clases utilitarias compartidas
+   (Bordes semáforo, colores y tipografía)
+   ============================================= */
+.border-pink {
+  border: 2px solid var(--sifco-pink, #e91e63);
+}
+
+.border-amber {
+  border: 2px solid var(--sifco-amber, #ffb300);
+}
+
+.border-green {
+  border: 2px solid var(--sifco-green-text, #4C9E07);
+}
+
+.color-pink {
+  color: var(--sifco-pink, #e91e63);
+}
+
+.color-amber {
+  color: var(--sifco-amber, #ffb300);
+}
+
+.color-green {
+  color: var(--sifco-green-text, #4C9E07);
+}
+
+.font-bold {
+  font-weight: 700;
+}
