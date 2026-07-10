@@ -10,13 +10,13 @@ const validate = () => {
     const TICKET = 5000;
     const T_APRO = 5;
     const T_DESEM = 3;
-    const ANALISTAS = 6;
+    //const ANALISTAS = 6;
     const SALARIO = 800;
     const HORAS_MES = 160;
     const ABAN = 0.20;       // 20%
     const REPR = 0.25;       // 25%
-    const MANUAL = 0.70;     // 70%
-    const SISTEMAS = 3;
+    //const MANUAL = 0.70;     // 70%
+    // const SISTEMAS = 3;
 
     // Benchmarks Colocación (Sección 2)
     const BMRK_TIEMPO = 0.60;
@@ -33,16 +33,16 @@ const validate = () => {
     const MORA_PCT = 0.10;   // 10%
     const TASA_REC = 0.60;   // 60%
     const COSTO_COB = 2000;
-    const MANUAL_PAG = 0.70; // 70%
+    // const MANUAL_PAG = 0.70; // 70%
     const ERROR_PAG = 0.05;  // 5%
-    const PROVISION_PCT = 0.03; // 3%
+    // const PROVISION_PCT = 0.03; // 3%
 
     // Benchmarks Recuperación (Sección 3)
     const MEJ_REC = 0.25;
     const MEJ_MORA = 0.30;
     const MEJ_COB = 0.45;
     const MEJ_ERR = 0.72;
-    const MEJ_CAST = 0.20;
+    // const MEJ_CAST = 0.20;
 
     console.log("=== INTERMEDIAS COLOCACIÓN (Sección 4) ===");
     const CREDITOS_MES = SOL * CONV;

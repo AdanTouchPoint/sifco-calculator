@@ -9,7 +9,6 @@ const formatPercent = (value: number) => new Intl.NumberFormat('en-US', { style:
 
 export const RecuperacionScreen: React.FC = () => {
     const state = useCalculatorStore();
-    const prevStep = state.prevStep;
 
     const results = calculateROI(state);
 

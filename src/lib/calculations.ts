@@ -27,13 +27,13 @@ export interface CalculationResults {
   CAP_NUEVA: number;
   CRED_ADD: number;
   COSTO_NUEVO: number;
-  
+
   DIAS_AHORRADOS: number;
 
   indicadorEficiencia: 'Alta' | 'Media' | 'Baja';
   indicadorRiesgoOp: 'Alto' | 'Medio' | 'Bajo';
   indicadorAutomatizacion: 'Alto' | 'Medio' | 'Bajo';
-  
+
   ROI_COLOCACION: number;
 
   // Recuperacion
@@ -47,7 +47,7 @@ export interface CalculationResults {
   PERDIDA_MORA_NEW: number;
   COSTO_COB_NEW: number;
   COSTO_ERROR_NEW: number;
-  
+
   indicadorMora: 'Alto' | 'Medio' | 'Bajo';
   indicadorEficienciaCob: 'Alta' | 'Media' | 'Baja';
   indicadorRiesgoPagos: 'Alto' | 'Medio' | 'Bajo';
@@ -67,14 +67,14 @@ export function calculateROI(state: CalculatorState): CalculationResults {
   const TICKET = state.montoTicket;
   const T_APRO = state.tiempoAprobacion;
   const T_DESEM = state.tiempoDesembolso;
-  const ANALISTAS = state.numAnalistas;
+  //const ANALISTAS = state.numAnalistas;
   const SALARIO = state.salarioAnalista;
   const HORAS_MES = state.horasLaboralesMes;
   const ABAN = state.porcentajeAbandono / 100;
   const REPR = state.porcentajeReprocesos / 100;
   const MANUAL = state.porcentajeManual / 100;
   const SISTEMAS = state.sistemasActuales;
-  
+
   const CARTERA_ACTIVA = state.saldoCarteraActiva;
   const MORA_PCT = state.porcentajeMoraNPL / 100;
   const TASA_REC = state.porcentajeRecuperacion / 100;
@@ -91,11 +91,11 @@ export function calculateROI(state: CalculatorState): CalculationResults {
   const COSTO_X_CREDITO = HRS_X_CREDITO * COSTO_HORA;
   const PERDIDA_ABANDONO = SOL * ABAN * TICKET * BMRK_INT;
   const COSTO_REPROCESOS = SOL * REPR * HRS_REPR * COSTO_HORA;
-  
+
   const CAP_NUEVA = CREDITOS_MES / (1 - BMRK_TIEMPO);
   const CRED_ADD = CAP_NUEVA - CREDITOS_MES;
   const COSTO_NUEVO = COSTO_X_CREDITO * (1 - BMRK_TIEMPO);
-  
+
   const DIAS_AHORRADOS = T_TOTAL * BMRK_TIEMPO;
 
   // INDICADORES: COLOCACION
@@ -175,7 +175,7 @@ export function calculateROI(state: CalculatorState): CalculationResults {
     CRED_ADD,
     COSTO_NUEVO,
     DIAS_AHORRADOS,
-    
+
     indicadorEficiencia,
     indicadorRiesgoOp,
     indicadorAutomatizacion,
