@@ -167,19 +167,11 @@
 }
 
 .sifco-rec-table th {
-    background-color: var(--sifco-green-text, #4C9E07);
-    color: #ffffff;
+    background-color: transparent;
+    color: var(--sifco-green-dark, #0A2214);
     padding: 14px 20px;
-    font-weight: 600;
+    font-weight: 700;
     font-family: var(--sifco-font, inherit);
-}
-
-.sifco-rec-table th:first-child {
-    border-top-left-radius: 8px;
-}
-
-.sifco-rec-table th:last-child {
-    border-top-right-radius: 8px;
 }
 
 .sifco-rec-table td {

@@ -86,3 +86,75 @@ p {
 .font-bold {
   font-weight: 700;
 }
+
+/* =============================================
+   Estilos Compartidos de la Tabla Comparativa
+   ============================================= */
+.sifco-table-hdr-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #ffffff !important;
+  font-size: 0.85rem;
+  text-align: center;
+  width: 100%;
+  min-width: 120px;
+  max-width: 160px;
+  box-sizing: border-box;
+}
+
+.sifco-table-hdr-badge.pink {
+  background-color: var(--sifco-pink, #e91e63);
+}
+
+.sifco-table-hdr-badge.dark-green {
+  background-color: var(--sifco-green-dark, #0A2214);
+}
+
+.sifco-table-hdr-badge.green {
+  background-color: var(--sifco-green-primary, #76BC21);
+}
+
+/* Círculo indicador de tendencia (Flechas ↑/↓) */
+.sifco-table-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #ffffff !important;
+  font-size: 0.65rem;
+  font-weight: 700;
+  margin-right: 8px;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.sifco-table-indicator.pink {
+  background-color: var(--sifco-pink, #e91e63);
+}
+
+.sifco-table-indicator.green {
+  background-color: var(--sifco-green-primary, #76BC21);
+}
+
+/* Resaltado de la columna de Mejora */
+.sifco-table-cell-highlight {
+  background-color: rgba(118, 188, 33, 0.08) !important;
+  color: var(--sifco-green-text, #4C9E07) !important;
+  font-weight: 700 !important;
+}
+
+/* Estilo para los textos de celdas */
+.sifco-table-val-hoy {
+  color: var(--sifco-pink, #e91e63);
+  font-weight: 600;
+}
+
+.sifco-table-val-b1l {
+  color: var(--sifco-green-dark, #0A2214);
+  font-weight: 500;
+}
+

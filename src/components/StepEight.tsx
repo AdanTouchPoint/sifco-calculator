@@ -133,7 +133,7 @@ export const StepPayments: React.FC = () => {
                             onClick={nextStep}
                             style={{ backgroundColor: '#F5A623', borderColor: '#F5A623' }}
                         >
-                            <span>Ver mis resultados →</span>
+                            <span>Generar Diagnóstico →</span>
                         </button>
                     </div>
 

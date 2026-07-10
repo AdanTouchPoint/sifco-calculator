@@ -1,11 +1,18 @@
 import React from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
+import { calculateROI } from '../lib/calculations';
 import './resultados.css';
 import RecuperacionScreen from './RecuperacionScreen';
 import ColocacionScreen from './ColocacionScreen';
 
+
+const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
+
 export const Resultados: React.FC = () => {
-    const resetCalculator = useCalculatorStore((state) => state.resetCalculator); // O la función que maneje el regreso al inicio
+    const state = useCalculatorStore();
+    const resetCalculator = state.resetCalculator; // O la función que maneje el regreso al inicio
+
+    const results = calculateROI(state);
 
     return (
         <div className="sifco-res-wrapper">
@@ -23,7 +30,7 @@ export const Resultados: React.FC = () => {
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                             </svg>
-                            <span className="sifco-res-mini-value">$326,400</span>
+                            <span className="sifco-res-mini-value">{formatCurrency(results.ROI_COLOCACION)}</span>
                         </div>
                     </div>
 
@@ -38,7 +45,7 @@ export const Resultados: React.FC = () => {
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14h-2v-2h2zm0-4h-2V7h2z" />
                             </svg>
-                            <span className="sifco-res-mini-value">$112,800</span>
+                            <span className="sifco-res-mini-value">{formatCurrency(results.ROI_RECUPERACION)}</span>
                         </div>
                     </div>
 
@@ -46,7 +53,7 @@ export const Resultados: React.FC = () => {
 
                 {/* SECCIÓN CENTRAL: GRAN TOTAL */}
                 <div className="sifco-res-total-section">
-                    <h1 className="sifco-res-grand-total">$439,200</h1>
+                    <h1 className="sifco-res-grand-total">{formatCurrency(results.ROI_TOTAL)}</h1>
 
                     <p className="sifco-res-total-desc">
                         Suma de ahorros en colocación mas recuperación de cartera

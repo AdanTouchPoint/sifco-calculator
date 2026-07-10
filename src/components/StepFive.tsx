@@ -5,7 +5,7 @@ import './calculatorsteps.css'; // Usamos tu CSS reutilizable de siempre
 export const StepFive: React.FC = () => {
     // 1. Suscripción a las variables del Paso 5
     const porcentajeManual = useCalculatorStore((state) => state.porcentajeManual as number);
-    const sistemasActuales = useCalculatorStore((state) => state.sistemasActuales as string);
+    const sistemasActuales = useCalculatorStore((state) => state.sistemasActuales);
 
     // 2. Acciones globales
     const setFieldValue = useCalculatorStore((state) => state.setFieldValue);
@@ -68,7 +68,8 @@ export const StepFive: React.FC = () => {
                     <div className="sifco-step-input-group">
                         <label className="sifco-step-label">Cuantos sistemas/herramientas usan actualmente?</label>
                         <input
-                            type="text"
+                            type="number"
+                            min="1"
                             className="sifco-step-input-text"
                             value={sistemasActuales}
                             onChange={(e) => setFieldValue('sistemasActuales', Number(e.target.value))}

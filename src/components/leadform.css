@@ -1,0 +1,433 @@
+/* --- ESTILOS PARA LEAD FORM COMPONENT --- */
+
+.sifco-lead-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background-color: var(--sifco-bg-light, #f8fafc);
+    font-family: var(--sifco-font, 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif);
+    animation: leadFadeIn 0.5s ease-out;
+}
+
+@keyframes leadFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sifco-lead-card {
+    background: linear-gradient(135deg, var(--sifco-green-mid, #123E24), var(--sifco-green-dark, #0A2214));
+    border-radius: 40px;
+    color: #ffffff;
+    max-width: 1000px;
+    width: 100%;
+    padding: 40px 48px 48px 48px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Background image subtle overlay */
+.sifco-lead-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Close/Skip button '✕' */
+.sifco-lead-close-btn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.sifco-lead-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Inner elements position relative to be above overlay */
+.sifco-lead-header,
+.sifco-lead-content,
+.sifco-lead-form-container,
+.sifco-lead-footer {
+    position: relative;
+    z-index: 2;
+}
+
+/* --- HEADER / NAVBAR INSIDE CARD --- */
+.sifco-lead-header {
+    width: 100%;
+}
+
+.sifco-lead-navbar {
+    background: #ffffff;
+    border-radius: 100px;
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.sifco-lead-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.sifco-lead-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sifco-lead-logo-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sifco-lead-bar {
+    width: 24px;
+    height: 8px;
+    border-radius: 2px;
+    transform: skewX(-12deg);
+    display: block;
+}
+
+.sifco-lead-bar-top {
+    background-color: var(--sifco-green-primary, #76BC21);
+}
+
+.sifco-lead-bar-bottom {
+    background-color: #2E6A38;
+}
+
+.sifco-lead-logo-text {
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    color: var(--sifco-green-dark, #0A2214);
+}
+
+.sifco-lead-divider {
+    color: #cbd5e1;
+    font-weight: 300;
+}
+
+.sifco-lead-nav-subtitle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sifco-lead-btn-calc {
+    background-color: var(--sifco-accent, #FFB84D);
+    color: var(--sifco-green-dark, #0A2214);
+    border: none;
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: default;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* --- CONTENT --- */
+.sifco-lead-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sifco-lead-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.sifco-lead-text-highlight {
+    color: var(--sifco-green-primary, #76BC21);
+}
+
+.sifco-lead-subtitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+.sifco-lead-description {
+    font-size: 1.05rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-weight: 300;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* --- FORM --- */
+.sifco-lead-form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+    max-width: 850px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.sifco-lead-fields-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+}
+
+.sifco-lead-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.sifco-lead-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--sifco-green-primary, #76BC21);
+    letter-spacing: 0.02em;
+}
+
+.sifco-lead-input {
+    background-color: #ffffff;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    color: var(--sifco-green-dark, #0A2214);
+    font-family: inherit;
+    width: 100%;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.sifco-lead-input:focus {
+    outline: none;
+    border-color: var(--sifco-green-primary, #76BC21);
+    box-shadow: 0 0 0 4px rgba(118, 188, 33, 0.2);
+}
+
+.sifco-lead-input::placeholder {
+    color: #94a3b8;
+    opacity: 0.8;
+}
+
+.sifco-lead-submit-btn {
+    background-color: #F5A623;
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.25s ease;
+    box-shadow: 0 10px 25px rgba(245, 166, 35, 0.3);
+}
+
+.sifco-lead-submit-btn:hover {
+    background-color: #e09210;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(245, 166, 35, 0.45);
+}
+
+.sifco-lead-submit-btn:active {
+    transform: translateY(0);
+}
+
+.sifco-lead-submit-btn:disabled {
+    background-color: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.sifco-lead-btn-arrow {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-top: 2.5px solid #ffffff;
+    border-right: 2.5px solid #ffffff;
+    transform: rotate(45deg);
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.sifco-lead-btn-arrow::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 2.5px;
+    background-color: #ffffff;
+    transform: rotate(-45deg);
+    top: 3.5px;
+    right: -1.5px;
+}
+
+.sifco-lead-submit-btn:hover .sifco-lead-btn-arrow {
+    transform: translate(3px, 0) rotate(45deg);
+}
+
+/* --- FOOTER / DISCLAIMER --- */
+.sifco-lead-footer {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.sifco-lead-disclaimer {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.sifco-lead-close-link {
+    color: #ffffff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.sifco-lead-close-link:hover {
+    color: var(--sifco-green-primary, #76BC21);
+}
+
+/* Validation Feedback message */
+.sifco-lead-validation-msg {
+    color: #ff8a8a;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 4px;
+    min-height: 20px;
+    text-align: center;
+}
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 850px) {
+    .sifco-lead-fields-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .sifco-lead-card {
+        padding: 30px 24px;
+        gap: 24px;
+    }
+
+    .sifco-lead-title {
+        font-size: 2rem;
+    }
+
+    .sifco-lead-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .sifco-lead-description {
+        font-size: 0.95rem;
+    }
+
+    .sifco-lead-navbar {
+        padding: 10px 20px;
+    }
+
+    .sifco-lead-btn-calc {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+
+    .sifco-lead-close-btn {
+        top: 15px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sifco-lead-card {
+        border-radius: 24px;
+        padding: 24px 16px;
+    }
+
+    .sifco-lead-title {
+        font-size: 1.65rem;
+    }
+
+    .sifco-lead-navbar {
+        flex-direction: column;
+        gap: 10px;
+        border-radius: 20px;
+        padding: 12px;
+    }
+
+    .sifco-lead-nav-subtitle,
+    .sifco-lead-divider {
+        display: none;
+    }
+
+    .sifco-lead-submit-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+}

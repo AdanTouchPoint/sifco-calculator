@@ -1,19 +1,40 @@
 import React from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
+import { calculateROI, BMRK_TIEMPO, BMRK_REPR, BMRK_ABAN } from '../lib/calculations';
 import './colocacionscreen.css';
+import backgroundImg from '../assets/backgroundImg.png';
+
+const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
+const formatNumber = (value: number, decimals: number = 0) => new Intl.NumberFormat('en-US', { maximumFractionDigits: decimals }).format(value);
+const formatPercent = (value: number) => new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 1 }).format(value);
 
 export const ColocacionScreen: React.FC = () => {
-    const prevStep = useCalculatorStore((state) => state.prevStep);
+    const state = useCalculatorStore();
+    const prevStep = state.prevStep;
+
+    const results = calculateROI(state);
+
+    const getIndicatorClass = (indicator: string) => {
+        if (indicator === 'Baja' || indicator === 'Alto') return 'border-pink';
+        if (indicator === 'Media' || indicator === 'Medio') return 'border-amber';
+        return 'border-green';
+    };
+
+    const getColorClass = (indicator: string) => {
+        if (indicator === 'Baja' || indicator === 'Alto') return 'color-pink';
+        if (indicator === 'Media' || indicator === 'Medio') return 'color-amber';
+        return 'color-green';
+    };
 
     return (
         <div className="sifco-diag-wrapper">
 
             {/* HERO HEADER VERDE COMPLETO */}
-            <div className="sifco-diag-hero">
+            <div className="sifco-diag-hero" style={{ backgroundImage: ` url(${backgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <div className="sifco-diag-hero-content">
                     <span className="sifco-diag-hero-tag">Diagnostico de tu Operación</span>
                     <h1 className="sifco-diag-hero-title">
-                        400 solicitudes/mes,<br />$5,000 ticket promedio
+                        {formatNumber(state.solicitudesMes)} solicitudes/mes,<br />{formatCurrency(state.montoTicket)} ticket promedio
                     </h1>
                     <p className="sifco-diag-hero-subtitle">
                         Basado en benchmarks reales de implementaciones B1Lending
@@ -26,36 +47,36 @@ export const ColocacionScreen: React.FC = () => {
 
                 {/* FILA 1: TARJETAS GRANDES DE ESTADO */}
                 <div className="sifco-diag-top-cards">
-                    <div className="sifco-diag-big-card border-pink">
+                    <div className={`sifco-diag-big-card ${getIndicatorClass(results.indicadorEficiencia)}`}>
                         <span className="sifco-diag-big-label">Eficiencia Operativa</span>
-                        <div className="sifco-diag-big-value-wrapper color-pink">
+                        <div className={`sifco-diag-big-value-wrapper ${getColorClass(results.indicadorEficiencia)}`}>
                             <svg className="sifco-diag-card-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M7 11h10v2H7z" />
                             </svg>
-                            <span className="sifco-diag-big-value">Baja</span>
+                            <span className="sifco-diag-big-value">{results.indicadorEficiencia}</span>
                         </div>
                     </div>
 
-                    <div className="sifco-diag-big-card border-amber">
+                    <div className={`sifco-diag-big-card ${getIndicatorClass(results.indicadorRiesgoOp)}`}>
                         <span className="sifco-diag-big-label">Riesgo Operativo</span>
-                        <div className="sifco-diag-big-value-wrapper color-amber">
+                        <div className={`sifco-diag-big-value-wrapper ${getColorClass(results.indicadorRiesgoOp)}`}>
                             <svg className="sifco-diag-card-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14h-2v-2h2zm0-4h-2V7h2z" />
                             </svg>
-                            <span className="sifco-diag-big-value">Medio</span>
+                            <span className="sifco-diag-big-value">{results.indicadorRiesgoOp}</span>
                         </div>
                     </div>
 
-                    <div className="sifco-diag-big-card border-green">
+                    <div className={`sifco-diag-big-card ${getIndicatorClass(results.indicadorAutomatizacion)}`}>
                         <span className="sifco-diag-big-label">Potencial de Automatización</span>
-                        <div className="sifco-diag-big-value-wrapper color-green">
+                        <div className={`sifco-diag-big-value-wrapper ${getColorClass(results.indicadorAutomatizacion)}`}>
                             <svg className="sifco-diag-card-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                             </svg>
-                            <span className="sifco-diag-big-value">Alto</span>
+                            <span className="sifco-diag-big-value">{results.indicadorAutomatizacion}</span>
                         </div>
                     </div>
                 </div>
@@ -64,7 +85,7 @@ export const ColocacionScreen: React.FC = () => {
                 <div className="sifco-diag-bottom-cards">
                     <div className="sifco-diag-metric-card border-pink">
                         <div className="sifco-diag-metric-label">Pérdida por abandono / mes</div>
-                        <div className="sifco-diag-metric-value color-pink">$24,000</div>
+                        <div className="sifco-diag-metric-value color-pink">{formatCurrency(results.PERDIDA_ABANDONO)}</div>
                         <div className="sifco-diag-metric-desc">
                             Clientes listos para tomar crédito que se van por fricción.
                         </div>
@@ -72,7 +93,7 @@ export const ColocacionScreen: React.FC = () => {
 
                     <div className="sifco-diag-metric-card border-pink">
                         <div className="sifco-diag-metric-label">Costo de reprocesos / mes</div>
-                        <div className="sifco-diag-metric-value color-pink">$3,200</div>
+                        <div className="sifco-diag-metric-value color-pink">{formatCurrency(results.COSTO_REPROCESOS)}</div>
                         <div className="sifco-diag-metric-desc">
                             Horas de analistas perdidas en correcciones y retrabajos.
                         </div>
@@ -80,7 +101,7 @@ export const ColocacionScreen: React.FC = () => {
 
                     <div className="sifco-diag-metric-card border-green">
                         <div className="sifco-diag-metric-label">Créditos adicionales / mes</div>
-                        <div className="sifco-diag-metric-value color-green">+112</div>
+                        <div className="sifco-diag-metric-value color-green">+{formatNumber(results.CRED_ADD)}</div>
                         <div className="sifco-diag-metric-desc">
                             Con el mismo equipo, optimizando el proceso.
                         </div>
@@ -88,7 +109,7 @@ export const ColocacionScreen: React.FC = () => {
 
                     <div className="sifco-diag-metric-card border-green">
                         <div className="sifco-diag-metric-label">Días ahorrados / Crédito</div>
-                        <div className="sifco-diag-metric-value color-green">5 días</div>
+                        <div className="sifco-diag-metric-value color-green">{formatNumber(results.DIAS_AHORRADOS, 1)} días</div>
                         <div className="sifco-diag-metric-desc">
                             Desembolso más rápido = ingresos que llegan antes.
                         </div>
@@ -103,48 +124,48 @@ export const ColocacionScreen: React.FC = () => {
                         <table className="sifco-diag-table">
                             <thead>
                                 <tr>
-                                    <th>Métrica</th>
-                                    <th>Hoy</th>
-                                    <th>Con B1Lending</th>
-                                    <th>Mejora</th>
+                                    <th></th>
+                                    <th><span className="sifco-table-hdr-badge pink">Hoy</span></th>
+                                    <th><span className="sifco-table-hdr-badge dark-green">Con B1Lending</span></th>
+                                    <th><span className="sifco-table-hdr-badge green">Mejora</span></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>Tiempo de aprobación</td>
-                                    <td className="color-pink font-bold">5 días</td>
-                                    <td className="color-green">2 días</td>
-                                    <td className="color-green font-bold">- 60%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {state.tiempoAprobacion} días</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatNumber(state.tiempoAprobacion * (1 - BMRK_TIEMPO), 1)} días</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(BMRK_TIEMPO)}</td>
                                 </tr>
                                 <tr>
                                     <td>Tiempo total hasta desembolso</td>
-                                    <td className="color-pink font-bold">8 días</td>
-                                    <td className="color-green">3.2 días</td>
-                                    <td className="color-green font-bold">- 5 días</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {results.T_TOTAL} días</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatNumber(results.T_TOTAL * (1 - BMRK_TIEMPO), 1)} días</td>
+                                    <td className="sifco-table-cell-highlight">- {formatNumber(results.DIAS_AHORRADOS, 1)} días</td>
                                 </tr>
                                 <tr>
                                     <td>Créditos procesados / mes</td>
-                                    <td className="color-pink font-bold">160</td>
-                                    <td className="color-green">267</td>
-                                    <td className="color-green font-bold">+ 107 más</td>
+                                    <td><span className="sifco-table-indicator pink">↓</span> {formatNumber(results.CREDITOS_MES)}</td>
+                                    <td><span className="sifco-table-indicator green">↑</span> {formatNumber(results.CAP_NUEVA)}</td>
+                                    <td className="sifco-table-cell-highlight">+ {formatNumber(results.CRED_ADD)} más</td>
                                 </tr>
                                 <tr>
                                     <td>Costo operativo por crédito</td>
-                                    <td className="color-pink font-bold">$25</td>
-                                    <td className="color-green">$10</td>
-                                    <td className="color-green font-bold">- 60%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {formatCurrency(results.COSTO_X_CREDITO)}</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatCurrency(results.COSTO_NUEVO)}</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(BMRK_TIEMPO)}</td>
                                 </tr>
                                 <tr>
                                     <td>% Reprocesos</td>
-                                    <td className="color-pink font-bold">25%</td>
-                                    <td className="color-green">10%</td>
-                                    <td className="color-green font-bold">- 60%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {state.porcentajeReprocesos}%</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatNumber(state.porcentajeReprocesos * (1 - BMRK_REPR), 1)}%</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(BMRK_REPR)}</td>
                                 </tr>
                                 <tr>
                                     <td>% Abandono de clientes</td>
-                                    <td className="color-pink font-bold">20%</td>
-                                    <td className="color-green">10%</td>
-                                    <td className="color-green font-bold">- 50%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {state.porcentajeAbandono}%</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatNumber(state.porcentajeAbandono * (1 - BMRK_ABAN), 1)}%</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(BMRK_ABAN)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -155,12 +176,7 @@ export const ColocacionScreen: React.FC = () => {
                     </p>
                 </div>
 
-                {/* BOTÓN DE RETORNO */}
-                <div className="sifco-diag-footer">
-                    <button type="button" className="sifco-diag-btn-back" onClick={prevStep}>
-                        ← Modificar Datos
-                    </button>
-                </div>
+
 
             </div>
         </div>

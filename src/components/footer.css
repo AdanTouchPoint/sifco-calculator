@@ -1,0 +1,147 @@
+/* --- ESTILOS PARA EL COMPONENTE FOOTER --- */
+
+.sifco-footer-wrapper {
+    background-color: #111111;
+    color: #ffffff;
+    padding: 70px 40px 40px 40px;
+    font-family: var(--sifco-font, 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+}
+
+.sifco-footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 50px;
+    width: 100%;
+}
+
+/* --- COLUMNA IZQUIERDA (LOGO + DESCRIPCIÓN + REDES) --- */
+.sifco-footer-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sifco-footer-logo-img {
+    height: 48px;
+    width: auto;
+    align-self: flex-start;
+    display: block;
+}
+
+.sifco-footer-desc {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    line-height: 1.6;
+    font-weight: 300;
+    margin: 0;
+    text-align: left;
+}
+
+.sifco-footer-socials {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.sifco-footer-social-link {
+    display: inline-block;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sifco-footer-social-link:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
+}
+
+.sifco-footer-social-icon {
+    width: 42px;
+    height: 42px;
+    display: block;
+}
+
+/* --- COLUMNAS DE ENLACES --- */
+.sifco-footer-links-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sifco-footer-col-title {
+    color: var(--sifco-green-primary, #76BC21);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.sifco-footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sifco-footer-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+    display: inline-block;
+}
+
+.sifco-footer-link:hover {
+    color: #ffffff;
+    padding-left: 2px;
+}
+
+/* --- BOTTOM BAR / COPYRIGHT --- */
+.sifco-footer-bottom {
+    max-width: 1200px;
+    margin: 40px auto 0 auto;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.sifco-footer-copy {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 300;
+    margin: 0;
+}
+
+/* --- DISEÑO RESPONSIVO --- */
+@media (max-width: 1024px) {
+    .sifco-footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sifco-footer-wrapper {
+        padding: 50px 20px 30px 20px;
+    }
+
+    .sifco-footer-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .sifco-footer-info-col {
+        gap: 16px;
+    }
+
+    .sifco-footer-bottom {
+        margin-top: 30px;
+        padding-top: 20px;
+    }
+}

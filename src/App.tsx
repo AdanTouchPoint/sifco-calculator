@@ -9,7 +9,10 @@ import StepFive from './components/StepFive'
 import StepSix from './components/StepSix'
 import StepSeven from './components/StepSeven'
 import StepEight from './components/StepEight'
+import LeadForm from './components/LeadForm'
 import { Resultados } from './components/Resultados'
+import Footer from './components/Footer'
+
 function App() {
   const currentStep = useCalculatorStore((state) => state.currentStep);
   return (
@@ -24,7 +27,9 @@ function App() {
         {currentStep === 6 && <StepSix />}
         {currentStep === 7 && <StepSeven />}
         {currentStep === 8 && <StepEight />}
-        {currentStep === 9 && <Resultados />}
+        {currentStep === 9 && <LeadForm />}
+        {currentStep === 10 && <Resultados />}
+        <Footer />
       </div>
 
     </>

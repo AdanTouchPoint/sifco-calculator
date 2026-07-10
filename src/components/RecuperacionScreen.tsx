@@ -1,19 +1,39 @@
 import React from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
+import { calculateROI, MEJ_REC, MEJ_MORA, MEJ_COB, MEJ_ERR, MEJ_CAST } from '../lib/calculations';
 import './recuperacionscreen.css';
+import backgroundImg from '../assets/backgroundImg.png';
+
+const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
+const formatPercent = (value: number) => new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 1 }).format(value);
 
 export const RecuperacionScreen: React.FC = () => {
-    const prevStep = useCalculatorStore((state) => state.prevStep);
+    const state = useCalculatorStore();
+    const prevStep = state.prevStep;
+
+    const results = calculateROI(state);
+
+    const getIndicatorClass = (indicator: string) => {
+        if (indicator === 'Baja' || indicator === 'Alto') return 'border-pink';
+        if (indicator === 'Media' || indicator === 'Medio') return 'border-amber';
+        return 'border-green';
+    };
+
+    const getColorClass = (indicator: string) => {
+        if (indicator === 'Baja' || indicator === 'Alto') return 'color-pink';
+        if (indicator === 'Media' || indicator === 'Medio') return 'color-amber';
+        return 'color-green';
+    };
 
     return (
         <div className="sifco-rec-wrapper">
 
             {/* HERO HEADER VERDE DE RECUPERACIÓN */}
-            <div className="sifco-rec-hero">
+            <div className="sifco-rec-hero" style={{ backgroundImage: ` url(${backgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <div className="sifco-rec-hero-content">
                     <span className="sifco-rec-hero-tag">Diagnostico de Recuperación</span>
                     <h1 className="sifco-rec-hero-title">
-                        Cartera $500K, NPL 10%,<br />recuperacion 60%
+                        Cartera {formatCurrency(state.saldoCarteraActiva)}, NPL {state.porcentajeMoraNPL}%,<br />recuperacion {state.porcentajeRecuperacion}%
                     </h1>
                     <p className="sifco-rec-hero-subtitle">
                         Benchmarks B1Lending: cobranza digital y recuperacion automatizada
@@ -24,39 +44,39 @@ export const RecuperacionScreen: React.FC = () => {
             {/* CONTENEDOR PRINCIPAL */}
             <div className="sifco-rec-container">
 
-                {/* FILA 1: TARJETAS GRANDES DE ESTADO (Todas en estado "Medio" / Amber en image_9d2ac3.png) */}
+                {/* FILA 1: TARJETAS GRANDES DE ESTADO */}
                 <div className="sifco-rec-top-cards">
 
-                    <div className="sifco-rec-big-card border-amber">
+                    <div className={`sifco-rec-big-card ${getIndicatorClass(results.indicadorMora)}`}>
                         <span className="sifco-rec-big-label">Índice de Morosidad</span>
-                        <div className="sifco-rec-big-value-wrapper color-amber">
+                        <div className={`sifco-rec-big-value-wrapper ${getColorClass(results.indicadorMora)}`}>
                             <svg className="sifco-rec-card-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14h-2v-2h2zm0-4h-2V7h2z" />
                             </svg>
-                            <span className="sifco-rec-big-value">Medio</span>
+                            <span className="sifco-rec-big-value">{results.indicadorMora}</span>
                         </div>
                     </div>
 
-                    <div className="sifco-rec-big-card border-amber">
+                    <div className={`sifco-rec-big-card ${getIndicatorClass(results.indicadorEficienciaCob)}`}>
                         <span className="sifco-rec-big-label">Eficiencia de Cobranza</span>
-                        <div className="sifco-rec-big-value-wrapper color-amber">
+                        <div className={`sifco-rec-big-value-wrapper ${getColorClass(results.indicadorEficienciaCob)}`}>
                             <svg className="sifco-rec-card-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14h-2v-2h2zm0-4h-2V7h2z" />
                             </svg>
-                            <span className="sifco-rec-big-value">Medio</span>
+                            <span className="sifco-rec-big-value">{results.indicadorEficienciaCob}</span>
                         </div>
                     </div>
 
-                    <div className="sifco-rec-big-card border-amber">
+                    <div className={`sifco-rec-big-card ${getIndicatorClass(results.indicadorRiesgoPagos)}`}>
                         <span className="sifco-rec-big-label">Riesgo Registro de Pagos</span>
-                        <div className="sifco-rec-big-value-wrapper color-amber">
+                        <div className={`sifco-rec-big-value-wrapper ${getColorClass(results.indicadorRiesgoPagos)}`}>
                             <svg className="sifco-rec-card-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
                                 <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14h-2v-2h2zm0-4h-2V7h2z" />
                             </svg>
-                            <span className="sifco-rec-big-value">Medio</span>
+                            <span className="sifco-rec-big-value">{results.indicadorRiesgoPagos}</span>
                         </div>
                     </div>
 
@@ -67,7 +87,7 @@ export const RecuperacionScreen: React.FC = () => {
 
                     <div className="sifco-rec-metric-card border-pink">
                         <div className="sifco-rec-metric-label">Pérdida por mora no recuperada</div>
-                        <div className="sifco-rec-metric-value color-pink">$20,000</div>
+                        <div className="sifco-rec-metric-value color-pink">{formatCurrency(results.PERDIDA_MORA)}</div>
                         <div className="sifco-rec-metric-desc">
                             Cartera vencida que no se recupera con proceso actual
                         </div>
@@ -75,7 +95,7 @@ export const RecuperacionScreen: React.FC = () => {
 
                     <div className="sifco-rec-metric-card border-pink">
                         <div className="sifco-rec-metric-label">Costo de cobranza / mes</div>
-                        <div className="sifco-rec-metric-value color-pink">$2,000</div>
+                        <div className="sifco-rec-metric-value color-pink">{formatCurrency(state.costoMensualCobranza)}</div>
                         <div className="sifco-rec-metric-desc">
                             Gestión manual: llamadas, visitas y seguimiento
                         </div>
@@ -83,7 +103,7 @@ export const RecuperacionScreen: React.FC = () => {
 
                     <div className="sifco-rec-metric-card border-green">
                         <div className="sifco-rec-metric-label">Recuperación adicional / mes</div>
-                        <div className="sifco-rec-metric-value color-green">$7,500</div>
+                        <div className="sifco-rec-metric-value color-green">{formatCurrency(results.PERDIDA_MORA - results.PERDIDA_MORA_NEW)}</div>
                         <div className="sifco-rec-metric-desc">
                             Mejora con alertas tempranas y IA
                         </div>
@@ -91,7 +111,7 @@ export const RecuperacionScreen: React.FC = () => {
 
                     <div className="sifco-rec-metric-card border-green">
                         <div className="sifco-rec-metric-label">Ahorro en cobranza y errores</div>
-                        <div className="sifco-rec-metric-value color-green">$1,100</div>
+                        <div className="sifco-rec-metric-value color-green">{formatCurrency((state.costoMensualCobranza - results.COSTO_COB_NEW) + (results.COSTO_ERROR_PAG - results.COSTO_ERROR_NEW))}</div>
                         <div className="sifco-rec-metric-desc">
                             Automatizando gestiones y eliminando errores de pagos
                         </div>
@@ -107,42 +127,42 @@ export const RecuperacionScreen: React.FC = () => {
                         <table className="sifco-rec-table">
                             <thead>
                                 <tr>
-                                    <th>Métrica</th>
-                                    <th>Hoy</th>
-                                    <th>Con B1Lending</th>
-                                    <th>Mejora</th>
+                                    <th></th>
+                                    <th><span className="sifco-table-hdr-badge pink">Hoy</span></th>
+                                    <th><span className="sifco-table-hdr-badge dark-green">Con B1Lending</span></th>
+                                    <th><span className="sifco-table-hdr-badge green">Mejora</span></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>Cartera en mora (NPL)</td>
-                                    <td className="color-pink font-bold">10%</td>
-                                    <td className="color-green">7%</td>
-                                    <td className="color-green font-bold">- 30%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {state.porcentajeMoraNPL}%</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatPercent(results.MORA_PCT_NEW)}</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(MEJ_MORA)}</td>
                                 </tr>
                                 <tr>
                                     <td>Tasa de recuperación</td>
-                                    <td className="color-pink font-bold">60%</td>
-                                    <td className="color-green">75%</td>
-                                    <td className="color-green font-bold">+ 25%</td>
+                                    <td><span className="sifco-table-indicator pink">↓</span> {state.porcentajeRecuperacion}%</td>
+                                    <td><span className="sifco-table-indicator green">↑</span> {formatPercent(results.TASA_REC_NEW)}</td>
+                                    <td className="sifco-table-cell-highlight">+ {formatPercent(MEJ_REC)}</td>
                                 </tr>
                                 <tr>
                                     <td>Costo de cobranza / mes</td>
-                                    <td className="color-pink font-bold">$2,000</td>
-                                    <td className="color-green">$1,100</td>
-                                    <td className="color-green font-bold">- 45%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {formatCurrency(state.costoMensualCobranza)}</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatCurrency(results.COSTO_COB_NEW)}</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(MEJ_COB)}</td>
                                 </tr>
                                 <tr>
                                     <td>Errores en registro de pagos</td>
-                                    <td className="color-pink font-bold">5%</td>
-                                    <td className="color-green">1.4%</td>
-                                    <td className="color-green font-bold">- 72%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {state.porcentajeErroresAplicacion}%</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatPercent((state.porcentajeErroresAplicacion / 100) * (1 - MEJ_ERR))}</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(MEJ_ERR)}</td>
                                 </tr>
                                 <tr>
                                     <td>Write-off / castigo anual</td>
-                                    <td className="color-pink font-bold">3%</td>
-                                    <td className="color-green">2.4%</td>
-                                    <td className="color-green font-bold">- 20%</td>
+                                    <td><span className="sifco-table-indicator pink">↑</span> {state.porcentajeWriteOffAnual}%</td>
+                                    <td><span className="sifco-table-indicator green">↓</span> {formatPercent((state.porcentajeWriteOffAnual / 100) * (1 - MEJ_CAST))}</td>
+                                    <td className="sifco-table-cell-highlight">- {formatPercent(MEJ_CAST)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -153,12 +173,6 @@ export const RecuperacionScreen: React.FC = () => {
                     </p>
                 </div>
 
-                {/* BOTÓN DE RETORNO */}
-                <div className="sifco-rec-footer">
-                    <button type="button" className="sifco-rec-btn-back" onClick={prevStep}>
-                        ← Modificar Datos
-                    </button>
-                </div>
 
             </div>
         </div>

@@ -2,6 +2,14 @@ import React from 'react';
 import './welcome.css';
 import { useCalculatorStore } from './../lib/useCalculatorStore';
 import HowItWorks from './HowItWorks';
+
+// Asset Imports
+import backgroundImg from '../assets/backgroundImg.png';
+import icon1 from '../assets/icon1.svg';
+import icon2 from '../assets/icon2.svg';
+import icon3 from '../assets/icon3.svg';
+import icon4 from '../assets/icon4.svg';
+
 export const Welcome: React.FC = () => {
     const { nextStep } = useCalculatorStore();
     return (
@@ -12,7 +20,7 @@ export const Welcome: React.FC = () => {
             {/* HERO SECTION */}
             <main className="sifco-hero-container">
 
-                <div className="sifco-hero-card">
+                <div className="sifco-hero-card" style={{ backgroundImage: ` url(${backgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                     {/* HEADER / NAVBAR */}
                     <header className="sifco-header">
                         <div className="sifco-navbar">
@@ -61,22 +69,22 @@ export const Welcome: React.FC = () => {
                 <div className="sifco-metrics-grid">
                     {/* Tarjeta 1 */}
                     <div className="sifco-metric-card">
-                        <span className="sifco-metric-number">70%</span>
+                        <img src={icon1} alt="Reducción en tiempo de proceso" className="sifco-metric-icon" />
                         <p className="sifco-metric-text">Reducción en tiempo de proceso</p>
                     </div>
                     {/* Tarjeta 2 */}
                     <div className="sifco-metric-card">
-                        <span className="sifco-metric-number">3x</span>
+                        <img src={icon2} alt="Más créditos mismo equipo" className="sifco-metric-icon" />
                         <p className="sifco-metric-text">Mas créditos mismo equipo</p>
                     </div>
                     {/* Tarjeta 3 */}
                     <div className="sifco-metric-card">
-                        <span className="sifco-metric-number">60%</span>
+                        <img src={icon3} alt="Menos errores y reprocesos" className="sifco-metric-icon" />
                         <p className="sifco-metric-text">Menos errores y reprocesos</p>
                     </div>
                     {/* Tarjeta 4 */}
                     <div className="sifco-metric-card">
-                        <span className="sifco-metric-number">NPL-</span>
+                        <img src={icon4} alt="Mejora en recuperación" className="sifco-metric-icon" />
                         <p className="sifco-metric-text">Mejora en recuperación</p>
                     </div>
                 </div>

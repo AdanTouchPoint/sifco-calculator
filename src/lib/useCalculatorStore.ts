@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface CalculatorState {
+export interface CalculatorState {
     // Navigation: 
     // 0 = Landing, 1 = HowItWorks
     // 2 a 9 = Pasos del Formulario (1 al 8)
@@ -23,7 +23,7 @@ interface CalculatorState {
     porcentajeReprocesos: number;
     // --- VARIABLES PASO 5 (Nivel de Automatización) ---
     porcentajeManual: number;
-    sistemasActuales: string;
+    sistemasActuales: number;
     // --- VARIABLES PASO 6 (Cartera y Morosidad) ---
     saldoCarteraActiva: number;
     porcentajeMoraNPL: number;
@@ -37,7 +37,13 @@ interface CalculatorState {
     porcentajeErroresAplicacion: number;
     porcentajeWriteOffAnual: number;
 
-    setFieldValue: (field: keyof Omit<CalculatorState, 'setFieldValue' | 'nextStep' | 'prevStep' | 'currentStep' | 'resetCalculator'>, value: number) => void;
+    // Datos de contacto (Lead capture)
+    email: string;
+    empresa: string;
+    setEmail: (email: string) => void;
+    setEmpresa: (empresa: string) => void;
+
+    setFieldValue: (field: keyof Omit<CalculatorState, 'setFieldValue' | 'nextStep' | 'prevStep' | 'currentStep' | 'resetCalculator' | 'email' | 'empresa' | 'setEmail' | 'setEmpresa'>, value: number) => void;
     nextStep: () => void;
     prevStep: () => void;
     resetCalculator: () => void;
@@ -60,7 +66,7 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     porcentajeReprocesos: 25,
     // Defaults Paso 5 (según imagen)
     porcentajeManual: 70,
-    sistemasActuales: '2-3 sistemas',
+    sistemasActuales: 3,
     // Defaults Paso 6 (según imagen)
     saldoCarteraActiva: 500000,
     porcentajeMoraNPL: 10,
@@ -73,6 +79,12 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     porcentajePagosManuales: 70,
     porcentajeErroresAplicacion: 5,
     porcentajeWriteOffAnual: 3,
+
+    // Lead Form
+    email: '',
+    empresa: '',
+    setEmail: (email) => set({ email }),
+    setEmpresa: (empresa) => set({ empresa }),
 
     setFieldValue: (field, value) => set({ [field]: value }),
 
@@ -100,7 +112,7 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
         porcentajeAbandono: 20,
         porcentajeReprocesos: 25,
         porcentajeManual: 70,
-        sistemasActuales: '2-3 sistemas',
+        sistemasActuales: 3,
         saldoCarteraActiva: 500000,
         porcentajeMoraNPL: 10,
         diasAtrasoPromedio: 45,
@@ -110,5 +122,7 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
         porcentajePagosManuales: 70,
         porcentajeErroresAplicacion: 5,
         porcentajeWriteOffAnual: 3,
+        email: '',
+        empresa: '',
     }),
 }));
