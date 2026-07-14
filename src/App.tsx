@@ -11,7 +11,7 @@ import StepSeven from './components/StepSeven'
 import StepEight from './components/StepEight'
 import LeadForm from './components/LeadForm'
 import { Resultados } from './components/Resultados'
-import Footer from './components/Footer'
+//import Footer from './components/Footer'
 
 function App() {
   const currentStep = useCalculatorStore((state) => state.currentStep);
@@ -29,7 +29,7 @@ function App() {
         {currentStep === 8 && <StepEight />}
         {currentStep === 9 && <LeadForm />}
         {currentStep === 10 && <Resultados />}
-        <Footer />
+        {/*<Footer />*/}
       </div>
 
     </>
