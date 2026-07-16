@@ -17,7 +17,7 @@ export const StepTwo: React.FC = () => {
 
                 {/* TOP BADGE */}
                 <div className="sifco-step-badge-category">
-                    BLOQUE 2 — TIEMPOS DEL PROCESO
+                    BLOQUE 2 — Tiempos del Proceso
                 </div>
 
                 {/* TÍTULO PRINCIPAL Y PASO */}

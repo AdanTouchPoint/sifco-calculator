@@ -19,7 +19,7 @@ export const StepPayments: React.FC = () => {
 
                 {/* TOP BADGE */}
                 <div className="sifco-step-badge-category">
-                    BLOQUE 8 — REGISTRO DE PAGOS Y PROVISIONES
+                    BLOQUE 8 — Registro de Pagos y Provisiones
                 </div>
 
                 {/* TÍTULO PRINCIPAL Y PROGRESO */}

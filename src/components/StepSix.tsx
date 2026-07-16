@@ -17,7 +17,7 @@ export const StepPortfolio: React.FC = () => {
       <div className="sifco-step-container">
 
         <div className="sifco-step-badge-category">
-          BLOQUE 6 — CARTERA Y MOROSIDAD
+          BLOQUE 6 — Cartera y Morosidad
         </div>
 
         <h2 className="sifco-step-title">Como esta tu cartera hoy?</h2>

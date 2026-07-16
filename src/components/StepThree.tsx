@@ -18,7 +18,7 @@ export const StepThree: React.FC = () => {
 
                 {/* TOP BADGE */}
                 <div className="sifco-step-badge-category">
-                    BLOQUE 3 — EQUIPO OPERATIVO
+                    BLOQUE 3 — Equipo Operativo
                 </div>
 
                 {/* TÍTULO PRINCIPAL Y PROGRESO */}

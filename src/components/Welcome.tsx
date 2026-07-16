@@ -9,6 +9,7 @@ import icon1 from '../assets/icon1.svg';
 import icon2 from '../assets/icon2.svg';
 import icon3 from '../assets/icon3.svg';
 import icon4 from '../assets/icon4.svg';
+import logoHeader from '../assets/Logo (1).svg';
 
 export const Welcome: React.FC = () => {
     const { nextStep } = useCalculatorStore();
@@ -27,11 +28,7 @@ export const Welcome: React.FC = () => {
                             <div className="sifco-nav-left">
                                 {/* Logo SIFCO */}
                                 <div className="sifco-logo-container">
-                                    <div className="sifco-logo-icon">
-                                        <span className="sifco-bar sifco-bar-top"></span>
-                                        <span className="sifco-bar sifco-bar-bottom"></span>
-                                    </div>
-                                    <span className="sifco-logo-text">SIFCO</span>
+                                    <img src={logoHeader} alt="" />
                                 </div>
                                 <span className="sifco-divider">|</span>
                                 <span className="sifco-nav-subtitle">Calculadora de ROI</span>

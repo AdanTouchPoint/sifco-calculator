@@ -11,7 +11,7 @@ export const HowItWorks: React.FC = () => {
       <section className="sifco-how-header">
         <h2 className="sifco-how-main-title">¿Cómo funciona la calculadora?</h2>
         <p className="sifco-how-subtitle">
-          Este simulador analiza tu operación actual mediante un recorrido guiado. No necesitas realizar cálculos complejos; la herramienta cruzará tus datos para entregarte un reporte financiero en tiempo real al finalizar.
+          Este simulador analiza tu operación actual mediante un recorrido guiado a través de <strong> dos módulos: de colocación y de recuperación.</strong> No necesitas realizar cálculos complejos; la herramienta te entregará un reporte financiero en tiempo real al finalizar.
         </p>
       </section>
 
@@ -35,7 +35,7 @@ export const HowItWorks: React.FC = () => {
             <p className="sifco-how-block-desc">Morosidad · Cobranza Registro de pagos</p>
           </div>
 
-          <div className="sifco-how-operator">+</div>
+          <div className="sifco-how-operator">=</div>
 
           {/* Bloque Blanco */}
           <div className="sifco-how-block-summary bg-block-white">

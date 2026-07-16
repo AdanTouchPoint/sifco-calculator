@@ -18,7 +18,7 @@ export const StepFive: React.FC = () => {
 
                 {/* TOP BADGE */}
                 <div className="sifco-step-badge-category">
-                    BLOQUE 5 — NIVEL DE AUTOMATIZACION
+                    BLOQUE 5 — Nivel de Automatización
                 </div>
 
                 {/* TÍTULO PRINCIPAL Y PROGRESO */}

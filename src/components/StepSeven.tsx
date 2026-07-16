@@ -19,7 +19,7 @@ export const StepSeven: React.FC = () => {
 
                 {/* TOP BADGE */}
                 <div className="sifco-step-badge-category">
-                    BLOQUE 7 — EFICIENCIA DE COBRANZA
+                    BLOQUE 7 — Eficiencia de Cobranza
                 </div>
 
                 {/* TÍTULO PRINCIPAL Y PROGRESO */}

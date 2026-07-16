@@ -17,7 +17,7 @@ export const StepFour: React.FC = () => {
 
                 {/* TOP BADGE */}
                 <div className="sifco-step-badge-category">
-                    BLOQUE 4 — INEFICIENCIAS ACTUALES
+                    BLOQUE 4 — Ineficiencias Actuales
                 </div>
 
                 {/* TÍTULO PRINCIPAL Y PROGRESO */}
