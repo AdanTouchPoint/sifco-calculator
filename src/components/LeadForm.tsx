@@ -9,6 +9,8 @@ export const LeadForm: React.FC = () => {
     const setEmail = useCalculatorStore((state) => state.setEmail);
     const setEmpresa = useCalculatorStore((state) => state.setEmpresa);
     const nextStep = useCalculatorStore((state) => state.nextStep);
+    const goToStep = useCalculatorStore((state) => state.goToStep);
+    const setLeadFormCompleted = (v: boolean) => useCalculatorStore.setState({ leadFormCompleted: v });
 
     // 2. Local state for form fields
     const [emailVal, setEmailVal] = useState(storeEmail);
@@ -47,12 +49,13 @@ export const LeadForm: React.FC = () => {
         // Save to store and proceed
         setEmail(trimmedEmail);
         setEmpresa(trimmedEmpresa);
+        setLeadFormCompleted(true);
         nextStep();
     };
 
-    // 5. Skip handler (close button or link)
+    // Skip handler: regresa a landing sin guardar datos
     const handleSkip = () => {
-        nextStep();
+        goToStep(0);
     };
 
     return (

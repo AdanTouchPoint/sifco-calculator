@@ -44,7 +44,7 @@ export const StepTwo: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `${(tiempoAprobacion / 15) * 100}%` }}
+                                style={{ left: `calc(${((tiempoAprobacion - 1) / (15 - 1)) * 100}% * (100% - 22px) / 100 + 11px)` }}
                             >
                                 {tiempoAprobacion} días
                             </div>
@@ -56,7 +56,7 @@ export const StepTwo: React.FC = () => {
                                 value={tiempoAprobacion}
                                 onChange={(e) => setFieldValue('tiempoAprobacion', Number(e.target.value))}
                                 style={{
-                                    background: `linear-gradient(to right, #76BC21 0%, #76BC21 ${(tiempoAprobacion / 15) * 100}%, #e2e8f0 ${(tiempoAprobacion / 15) * 100}%, #e2e8f0 100%)`
+                                    background: `linear-gradient(to right, #76BC21 0%, #76BC21 ${((tiempoAprobacion - 1) / (15 - 1)) * 100}%, #e2e8f0 ${((tiempoAprobacion - 1) / (15 - 1)) * 100}%, #e2e8f0 100%)`
                                 }}
                             />
                         </div>
@@ -70,7 +70,7 @@ export const StepTwo: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `${(tiempoDesembolso / 10) * 100}%` }}
+                                style={{ left: `calc(${(tiempoDesembolso / 10) * 100}% * (100% - 22px) / 100 + 11px)` }}
                             >
                                 {tiempoDesembolso} días
                             </div>

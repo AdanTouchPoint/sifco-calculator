@@ -10,7 +10,9 @@ const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style
 
 export const Resultados: React.FC = () => {
     const state = useCalculatorStore();
-    const resetCalculator = state.resetCalculator; // O la función que maneje el regreso al inicio
+    const resetCalculator = state.resetCalculator;
+    const leadFormCompleted = state.leadFormCompleted;
+    const goToStep = state.goToStep;
 
     const results = calculateROI(state);
 
@@ -74,7 +76,18 @@ export const Resultados: React.FC = () => {
 
                     {/* Enlaces Secundarios */}
                     <div className="sifco-res-links-row">
-                        <a href="#descargar" className="sifco-res-link">Descargar reporte PDF</a>
+                        {leadFormCompleted ? (
+                            <a href="#descargar" className="sifco-res-link">Descargar reporte PDF</a>
+                        ) : (
+                            <button
+                                type="button"
+                                className="sifco-res-link sifco-res-link-disabled"
+                                title="Llena el formulario para descargar tu reporte"
+                                onClick={() => goToStep(9)}
+                            >
+                                Descargar reporte PDF 🔒
+                            </button>
+                        )}
                         <a href="#hablar" className="sifco-res-link">Hablar con un asesor</a>
                     </div>
 

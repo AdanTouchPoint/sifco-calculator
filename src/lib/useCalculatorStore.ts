@@ -40,12 +40,14 @@ export interface CalculatorState {
     // Datos de contacto (Lead capture)
     email: string;
     empresa: string;
+    leadFormCompleted: boolean;
     setEmail: (email: string) => void;
     setEmpresa: (empresa: string) => void;
 
-    setFieldValue: (field: keyof Omit<CalculatorState, 'setFieldValue' | 'nextStep' | 'prevStep' | 'currentStep' | 'resetCalculator' | 'email' | 'empresa' | 'setEmail' | 'setEmpresa'>, value: number) => void;
+    setFieldValue: (field: keyof Omit<CalculatorState, 'setFieldValue' | 'nextStep' | 'prevStep' | 'goToStep' | 'currentStep' | 'resetCalculator' | 'email' | 'empresa' | 'setEmail' | 'setEmpresa' | 'leadFormCompleted'>, value: number) => void;
     nextStep: () => void;
     prevStep: () => void;
+    goToStep: (step: number) => void;
     resetCalculator: () => void;
 }
 
@@ -83,6 +85,7 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     // Lead Form
     email: '',
     empresa: '',
+    leadFormCompleted: false,
     setEmail: (email) => set({ email }),
     setEmpresa: (empresa) => set({ empresa }),
 
@@ -97,6 +100,9 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     prevStep: () => set((state) => ({
         currentStep: state.currentStep > 0 ? state.currentStep - 1 : state.currentStep
     })),
+
+    // Navega a un paso específico
+    goToStep: (step) => set({ currentStep: step }),
 
     // Reinicia toda la calculadora a sus valores por defecto
     resetCalculator: () => set({
@@ -124,5 +130,6 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
         porcentajeWriteOffAnual: 3,
         email: '',
         empresa: '',
+        leadFormCompleted: false,
     }),
 }));

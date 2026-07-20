@@ -72,7 +72,7 @@ export const StepThree: React.FC = () => {
                         <div className="sifco-step-slider-container">
                             <div
                                 className="sifco-step-slider-tooltip"
-                                style={{ left: `${(horasLaboralesMes / 200) * 100}%` }}
+                                style={{ left: `calc(${((horasLaboralesMes - 40) / (200 - 40)) * 100}% * (100% - 22px) / 100 + 11px)` }}
                             >
                                 {horasLaboralesMes} h
                             </div>
@@ -84,7 +84,7 @@ export const StepThree: React.FC = () => {
                                 value={horasLaboralesMes}
                                 onChange={(e) => setFieldValue('horasLaboralesMes', Number(e.target.value))}
                                 style={{
-                                    background: `linear-gradient(to right, #76BC21 0%, #76BC21 ${(horasLaboralesMes / 200) * 100}%, #e2e8f0 ${(horasLaboralesMes / 200) * 100}%, #e2e8f0 100%)`
+                                    background: `linear-gradient(to right, #76BC21 0%, #76BC21 ${((horasLaboralesMes - 40) / (200 - 40)) * 100}%, #e2e8f0 ${((horasLaboralesMes - 40) / (200 - 40)) * 100}%, #e2e8f0 100%)`
                                 }}
                             />
                         </div>
