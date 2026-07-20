@@ -1,0 +1,115 @@
+/* ========================================================
+   ESTILOS DE IMPRESIÓN — Solo se aplican al imprimir / guardar PDF
+   ======================================================== */
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 8mm;
+    }
+
+    /* ── Ocultar TODA la página ───────────────────────────────── */
+    html, body {
+        height: auto !important;
+        overflow: visible !important;
+        background: #fff !important;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    /* ── Mostrar SOLO el bloque de resultados ─────────────────── */
+    #sifco-results-capture,
+    #sifco-results-capture * {
+        visibility: visible !important;
+    }
+
+    #sifco-results-capture,
+    .sifco-res-container,
+    .sifco-diag-wrapper,
+    .sifco-rec-wrapper {
+        position: static !important;
+        display: block !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        background: transparent !important;
+    }
+
+    #sifco-results-capture {
+        background: #f8fafc !important;
+    }
+
+    /* ── Espaciados manuales (al quitar flex y su gap) ──────── */
+    .sifco-diag-wrapper,
+    .sifco-rec-wrapper,
+    .sifco-res-sum-row,
+    .sifco-res-total-section {
+        margin-bottom: 40px !important;
+    }
+
+    /* ── Ocultar botones de acción (no deben imprimirse) ─────── */
+    .sifco-res-actions,
+    .sifco-footer-wrapper,
+    .sifco-res-btn-recalc,
+    .sifco-res-btn-primary {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* ── Forzar colores (algunos browsers los desactivan al imprimir) */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* ── Evitar cortes de página dentro de tarjetas ──────────── */
+    .sifco-diag-big-card,
+    .sifco-diag-metric-card,
+    .sifco-rec-big-card,
+    .sifco-rec-metric-card,
+    .sifco-diag-table-section,
+    .sifco-rec-table-section {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* ── Quitar scroll/overflow horizontal a las tablas para que impriman bien */
+    .sifco-rec-table-responsive,
+    .sifco-diag-table-responsive,
+    .sifco-rec-container,
+    .sifco-diag-container {
+        overflow: visible !important;
+        overflow-x: visible !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    /* ── Salto de página antes de cada bloque principal ──────── */
+    .sifco-rec-wrapper {
+        break-before: page !important;
+        page-break-before: always !important;
+    }
+
+    /* ── Forzar que el gran total no se amontone con la tabla */
+    .sifco-res-sum-row {
+        break-before: auto !important;
+        page-break-before: auto !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-top: 60px !important;
+        padding-top: 20px !important;
+        clear: both !important;
+        position: relative !important;
+        display: flex !important; /* Mantenemos flex para las tarjetas lado a lado */
+    }
+    
+    .sifco-res-total-section {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        position: relative !important;
+    }
+}

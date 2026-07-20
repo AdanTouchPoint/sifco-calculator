@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import { calculateROI } from '../lib/calculations';
+import { generateResultadosPDF } from '../lib/generatePDF';
 import './resultados.css';
+import './print.css';
 import RecuperacionScreen from './RecuperacionScreen';
 import ColocacionScreen from './ColocacionScreen';
 
@@ -15,9 +17,19 @@ export const Resultados: React.FC = () => {
     const goToStep = state.goToStep;
 
     const results = calculateROI(state);
+    const [downloading, setDownloading] = useState(false);
+
+    const handleDownload = async () => {
+        setDownloading(true);
+        try {
+            await generateResultadosPDF(state.empresa);
+        } finally {
+            setDownloading(false);
+        }
+    };
 
     return (
-        <div className="sifco-res-wrapper">
+        <div id="sifco-results-capture" className="sifco-res-wrapper">
             <div className="sifco-res-container">
                 <ColocacionScreen />
                 <RecuperacionScreen />
@@ -77,7 +89,14 @@ export const Resultados: React.FC = () => {
                     {/* Enlaces Secundarios */}
                     <div className="sifco-res-links-row">
                         {leadFormCompleted ? (
-                            <a href="#descargar" className="sifco-res-link">Descargar reporte PDF</a>
+                            <button
+                                type="button"
+                                className="sifco-res-link"
+                                onClick={handleDownload}
+                                disabled={downloading}
+                            >
+                                {downloading ? '⏳ Generando PDF...' : '⬇ Descargar reporte PDF'}
+                            </button>
                         ) : (
                             <button
                                 type="button"
