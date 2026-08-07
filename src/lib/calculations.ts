@@ -1,18 +1,18 @@
 import type { CalculatorState } from './useCalculatorStore';
 
-// CONSTANTES Y FACTORES FIJOS (Según guide-calc.md)
+// CONSTANTES Y FACTORES FIJOS (Según caUpdate.html)
 export const BMRK_TIEMPO = 0.60;
 export const BMRK_REPR = 0.60;
-export const BMRK_ABAN = 0.50;
-export const BMRK_INT = 0.05;
-export const HRS_ACT_DIA = 0.5;
-export const HRS_REPR = 2;
+export const BMRK_ABAN = 0.35;
+export const BMRK_INT = 0.28;
+export const HRS_ACT_DIA = 0.75;
+export const HRS_REPR = 3.5;
 export const MESES_ANO = 12;
 
 export const MEJ_REC = 0.25;
 export const MEJ_MORA = 0.30;
-export const MEJ_COB = 0.45;
-export const MEJ_ERR = 0.72;
+export const MEJ_COB = 0.35;
+export const MEJ_ERR = 0.65;
 export const MEJ_CAST = 0.20;
 
 export interface CalculationResults {
@@ -84,15 +84,15 @@ export function calculateROI(state: CalculatorState): CalculationResults {
   const PROVISION_PCT = state.porcentajeWriteOffAnual / 100;
 
   // INTERMEDIATE: COLOCACION
-  const CREDITOS_MES = SOL * CONV;
+  const CREDITOS_MES = Math.round(SOL * CONV);
   const T_TOTAL = T_APRO + T_DESEM;
   const COSTO_HORA = SALARIO / HORAS_MES;
   const HRS_X_CREDITO = T_TOTAL * HRS_ACT_DIA;
-  const COSTO_X_CREDITO = HRS_X_CREDITO * COSTO_HORA;
-  const PERDIDA_ABANDONO = SOL * ABAN * TICKET * BMRK_INT;
-  const COSTO_REPROCESOS = SOL * REPR * HRS_REPR * COSTO_HORA;
+  const COSTO_X_CREDITO = T_TOTAL * HRS_ACT_DIA * COSTO_HORA;
+  const PERDIDA_ABANDONO = Math.round(SOL * ABAN) * TICKET * BMRK_INT;
+  const COSTO_REPROCESOS = Math.round(SOL * REPR) * HRS_REPR * COSTO_HORA;
 
-  const CAP_NUEVA = CREDITOS_MES / (1 - BMRK_TIEMPO);
+  const CAP_NUEVA = Math.round(CREDITOS_MES * (1 / (1 - BMRK_TIEMPO)));
   const CRED_ADD = CAP_NUEVA - CREDITOS_MES;
   const COSTO_NUEVO = COSTO_X_CREDITO * (1 - BMRK_TIEMPO);
 
@@ -107,9 +107,9 @@ export function calculateROI(state: CalculatorState): CalculationResults {
   }
 
   let indicadorRiesgoOp: 'Alto' | 'Medio' | 'Bajo' = 'Bajo';
-  if (SISTEMAS >= 4) {
+  if (SISTEMAS === 3) {
     indicadorRiesgoOp = 'Alto';
-  } else if (SISTEMAS >= 2) {
+  } else if (SISTEMAS === 2) {
     indicadorRiesgoOp = 'Medio';
   }
 
