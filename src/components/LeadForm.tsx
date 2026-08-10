@@ -1,59 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import './leadform.css';
 
+declare global {
+    interface Window {
+        ml?: ((...args: unknown[]) => void) & { q: unknown[][] };
+    }
+}
+
 export const LeadForm: React.FC = () => {
-    // 1. Store hooks
-    const storeEmail = useCalculatorStore((state) => state.email);
-    const storeEmpresa = useCalculatorStore((state) => state.empresa);
-    const setEmail = useCalculatorStore((state) => state.setEmail);
-    const setEmpresa = useCalculatorStore((state) => state.setEmpresa);
-    const nextStep = useCalculatorStore((state) => state.nextStep);
     const goToStep = useCalculatorStore((state) => state.goToStep);
-    const setLeadFormCompleted = (v: boolean) => useCalculatorStore.setState({ leadFormCompleted: v });
+    const nextStep = useCalculatorStore((state) => state.nextStep);
+    const formContainerRef = useRef<HTMLDivElement>(null);
 
-    // 2. Local state for form fields
-    const [emailVal, setEmailVal] = useState(storeEmail);
-    const [empresaVal, setEmpresaVal] = useState(storeEmpresa);
-    const [errorMsg, setErrorMsg] = useState('');
+    useEffect(() => {
+        const ml = ((...args: unknown[]) => {
+            ml.q.push(args);
+        }) as ((...args: unknown[]) => void) & { q: unknown[][] };
+        ml.q = [] as unknown[][];
+        window.ml = ml;
+        window.ml('account', '2500316');
 
-    // 3. Email validation helper
-    const validateEmail = (email: string) => {
-        const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return re.test(String(email).toLowerCase());
-    };
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://assets.mailerlite.com/js/universal.js';
+        document.head.appendChild(script);
 
-    // 4. Form submission handler
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setErrorMsg('');
+        return () => {
+            script.remove();
+        };
+    }, []);
 
-        const trimmedEmail = emailVal.trim();
-        const trimmedEmpresa = empresaVal.trim();
+    useEffect(() => {
+        const container = formContainerRef.current;
+        if (!container) return;
 
-        if (!trimmedEmail) {
-            setErrorMsg('Por favor, ingresa tu correo electrónico.');
-            return;
-        }
+        let hasAdvanced = false;
+        const observer = new MutationObserver(() => {
+            const success = container.querySelector<HTMLElement>('.row-success, .ml-form-successBody');
+            if (!success || hasAdvanced || getComputedStyle(success).display === 'none') return;
 
-        if (!validateEmail(trimmedEmail)) {
-            setErrorMsg('Por favor, ingresa un correo electrónico válido.');
-            return;
-        }
+            hasAdvanced = true;
+            useCalculatorStore.setState({ leadFormCompleted: true });
+            nextStep();
+        });
 
-        if (!trimmedEmpresa) {
-            setErrorMsg('Por favor, ingresa el nombre de tu empresa.');
-            return;
-        }
+        observer.observe(container, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            attributeFilter: ['class', 'style'],
+        });
 
-        // Save to store and proceed
-        setEmail(trimmedEmail);
-        setEmpresa(trimmedEmpresa);
-        setLeadFormCompleted(true);
-        nextStep();
-    };
+        return () => observer.disconnect();
+    }, [nextStep]);
 
-    // Skip handler: regresa a landing sin guardar datos
     const handleSkip = () => {
         goToStep(0);
     };
@@ -108,52 +109,7 @@ export const LeadForm: React.FC = () => {
 
                 {/* FORM */}
                 <div className="sifco-lead-form-container">
-                    <form className="sifco-lead-form" onSubmit={handleSubmit}>
-                        
-                        <div className="sifco-lead-fields-row">
-                            {/* EMAIL INPUT */}
-                            <div className="sifco-lead-input-group">
-                                <label className="sifco-lead-label" htmlFor="lead-email">
-                                    Correo Electrónico
-                                </label>
-                                <input
-                                    id="lead-email"
-                                    type="email"
-                                    className="sifco-lead-input"
-                                    placeholder="nombre@email.com"
-                                    value={emailVal}
-                                    onChange={(e) => setEmailVal(e.target.value)}
-                                />
-                            </div>
-
-                            {/* COMPANY INPUT */}
-                            <div className="sifco-lead-input-group">
-                                <label className="sifco-lead-label" htmlFor="lead-empresa">
-                                    Empresa
-                                </label>
-                                <input
-                                    id="lead-empresa"
-                                    type="text"
-                                    className="sifco-lead-input"
-                                    placeholder="Corporativo ASAP"
-                                    value={empresaVal}
-                                    onChange={(e) => setEmpresaVal(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Validation Error Message */}
-                        <div className="sifco-lead-validation-msg" role="alert">
-                            {errorMsg}
-                        </div>
-
-                        {/* SUBMIT BUTTON */}
-                        <button type="submit" className="sifco-lead-submit-btn">
-                            <span>Ver Mi Reporte y Descargar PDF</span>
-                            <i className="sifco-lead-btn-arrow"></i>
-                        </button>
-
-                    </form>
+                    <div ref={formContainerRef} className="ml-embedded" data-form="JWNBqM"></div>
                 </div>
 
                 {/* FOOTER & DISCLAIMER */}
