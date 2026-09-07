@@ -82,9 +82,14 @@ export const Resultados: React.FC = () => {
                 <div className="sifco-res-actions">
 
                     {/* Botón Principal Llamativo */}
-                    <button type="button" className="sifco-res-btn-primary">
+                    <a
+                        href="https://sifco.org/contacto"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="sifco-res-btn-primary"
+                    >
                         Solicitar demo personalizada
-                    </button>
+                    </a>
 
                     {/* Enlaces Secundarios */}
                     <div className="sifco-res-links-row">
