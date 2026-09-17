@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import { calculateROI } from '../lib/calculations';
 import { generateResultadosPDF } from '../lib/generatePDF';
@@ -18,6 +18,10 @@ export const Resultados: React.FC = () => {
 
     const results = calculateROI(state);
     const [downloading, setDownloading] = useState(false);
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const handleDownload = async () => {
         setDownloading(true);
