@@ -116,7 +116,7 @@ export const Resultados: React.FC = () => {
                                 Descargar reporte PDF 🔒
                             </button>
                         )}
-                        <a href="#hablar" className="sifco-res-link">Hablar con un asesor</a>
+                        <a href="https://wa.me/50230338255?text=quiero%20agendar%20una%20sesi%C3%B3n%20de%20consultor%C3%ADa" className="sifco-res-link">Hablar con un asesor</a>
                     </div>
 
                     {/* Botón Recalcular */}
