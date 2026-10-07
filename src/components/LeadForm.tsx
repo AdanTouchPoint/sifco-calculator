@@ -18,6 +18,7 @@ export const LeadForm: React.FC = () => {
     const [contactPreference, setContactPreference] = useState('');
     const [areaCode, setAreaCode] = useState('');
     const [phone, setPhone] = useState('');
+    const [implementationDeadline, setImplementationDeadline] = useState('');
 
     const wantsContact = contactPreference.startsWith('Sí');
 
@@ -54,6 +55,7 @@ export const LeadForm: React.FC = () => {
         if (!value.startsWith('Sí')) {
             setAreaCode('');
             setPhone('');
+            setImplementationDeadline('');
         }
     };
 
@@ -236,7 +238,7 @@ export const LeadForm: React.FC = () => {
                                                 </div>
                                             </div>
 
-                                            <div className={`ml-form-fieldRow ml-conditional-field ml-last-item${wantsContact ? '' : ' ml-conditional-hidden'}`}>
+                                            <div className={`ml-form-fieldRow ml-conditional-field${wantsContact ? '' : ' ml-conditional-hidden'}`}>
                                                 <div className="ml-field-group ml-field-phone">
                                                     <label htmlFor="ml-phone-44579002">Teléfono</label>
                                                     <input
@@ -252,6 +254,37 @@ export const LeadForm: React.FC = () => {
                                                         value={phone}
                                                         onChange={(event) => setPhone(event.target.value)}
                                                     />
+                                                </div>
+                                            </div>
+
+                                            <div className={`ml-form-fieldRow ml-conditional-field ml-last-item${wantsContact ? '' : ' ml-conditional-hidden'}`}>
+                                                <div className="ml-field-group ml-field-plazo_deseado_de_implementacion">
+                                                    <label htmlFor="ml-implementation-deadline-44579002">Plazo deseado de implementación</label>
+                                                    <select
+                                                        id="ml-implementation-deadline-44579002"
+                                                        className="custom-select"
+                                                        name="fields[plazo_deseado_de_implementacion]"
+                                                        aria-label="plazo_deseado_de_implementacion"
+                                                        aria-required={wantsContact}
+                                                        required={wantsContact}
+                                                        disabled={!wantsContact}
+                                                        value={implementationDeadline}
+                                                        onChange={(event) => setImplementationDeadline(event.target.value)}
+                                                    >
+                                                        <option value="">-</option>
+                                                        <option value="Inmediata: Requerido en plazo de 30 días.">
+                                                            Inmediata: Requerido en plazo de 30 días.
+                                                        </option>
+                                                        <option value="Próximo bimestre: Requerido entre este y el siguiente mes.">
+                                                            Próximo bimestre: Requerido entre este y el siguiente mes.
+                                                        </option>
+                                                        <option value="Próximos cuatro meses: En un plazo de 90-120 días.">
+                                                            Próximos cuatro meses: En un plazo de 90-120 días.
+                                                        </option>
+                                                        <option value="Planificación futura: 6 meses en adelante">
+                                                            Planificación futura: 6 meses en adelante
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
