@@ -2,37 +2,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import './leadform.css';
 
-declare global {
-    interface Window {
-        ml_webform_success_44579002?: () => void;
-    }
-}
-
 const MAILERLITE_SCRIPT = 'https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519';
 const MAILERLITE_TRACKING_URL = 'https://assets.mailerlite.com/jsonp/2500316/forms/195092090283099181/takel';
+const MAILERLITE_SUBSCRIBE_URL = 'https://assets.mailerlite.com/jsonp/2500316/forms/195092090283099181/subscribe';
+const EMAIL_VALIDATOR_URL = 'https://n8n-n8n.n4k6yy.easypanel.host/webhook/email-phone-validator';
 
 export const LeadForm: React.FC = () => {
     const goToStep = useCalculatorStore((state) => state.goToStep);
     const nextStep = useCalculatorStore((state) => state.nextStep);
     const hasAdvanced = useRef(false);
+    const validationInProgress = useRef(false);
     const [contactPreference, setContactPreference] = useState('');
     const [areaCode, setAreaCode] = useState('');
     const [phone, setPhone] = useState('');
     const [implementationDeadline, setImplementationDeadline] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const wantsContact = contactPreference.startsWith('Sí');
 
     useEffect(() => {
-        const onSuccess = () => {
-            if (hasAdvanced.current) return;
-
-            hasAdvanced.current = true;
-            useCalculatorStore.setState({ leadFormCompleted: true });
-            nextStep();
-        };
-
-        window.ml_webform_success_44579002 = onSuccess;
-
         if (!document.querySelector(`script[src="${MAILERLITE_SCRIPT}"]`)) {
             const script = document.createElement('script');
             script.async = true;
@@ -41,13 +30,7 @@ export const LeadForm: React.FC = () => {
         }
 
         void fetch(MAILERLITE_TRACKING_URL).catch(() => undefined);
-
-        return () => {
-            if (window.ml_webform_success_44579002 === onSuccess) {
-                delete window.ml_webform_success_44579002;
-            }
-        };
-    }, [nextStep]);
+    }, []);
 
     const handleContactPreferenceChange = (value: string) => {
         setContactPreference(value);
@@ -61,6 +44,64 @@ export const LeadForm: React.FC = () => {
 
     const handleSkip = () => {
         goToStep(0);
+    };
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        // Se cancela el submit nativo y se detiene la propagación para que el script de MailerLite no procese el formulario.
+        event.preventDefault();
+        event.stopPropagation();
+        if (hasAdvanced.current || validationInProgress.current) return;
+
+        const form = event.currentTarget;
+        const emailInput = form.querySelector<HTMLInputElement>('#ml-email-44579002');
+        const email = emailInput?.value.trim() ?? '';
+        if (!email) return;
+
+        validationInProgress.current = true;
+        setEmailError('');
+        setIsSubmitting(true);
+
+        try {
+            const query = new URLSearchParams({ email, bussiness_email: 'true' });
+            const response = await fetch(`${EMAIL_VALIDATOR_URL}?${query.toString()}`);
+            if (!response.ok) throw new Error('Email validation request failed');
+
+            const result: unknown = await response.json();
+            const validation = Array.isArray(result)
+                ? result[0] as { success?: unknown; message?: unknown } | undefined
+                : undefined;
+
+            if (validation?.success !== true) {
+                setEmailError(
+                    typeof validation?.message === 'string'
+                        ? validation.message
+                        : 'Ingresa un correo empresarial para continuar.',
+                );
+                return;
+            }
+
+            const body = new URLSearchParams();
+            new FormData(form).forEach((value, key) => {
+                if (typeof value === 'string') body.append(key, value);
+            });
+
+            // Respuesta opaca (no-cors): no se puede leer si MailerLite aceptó el registro, solo que la petición salió.
+            await fetch(MAILERLITE_SUBSCRIBE_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body,
+            });
+
+            if (hasAdvanced.current) return;
+            hasAdvanced.current = true;
+            useCalculatorStore.setState({ leadFormCompleted: true });
+            nextStep();
+        } catch {
+            setEmailError('No pudimos completar el envío. Inténtalo de nuevo.');
+        } finally {
+            validationInProgress.current = false;
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -116,19 +157,9 @@ export const LeadForm: React.FC = () => {
 
                                     <form
                                         className="ml-block-form"
-                                        action="https://assets.mailerlite.com/jsonp/2500316/forms/195092090283099181/subscribe"
+                                        action={MAILERLITE_SUBSCRIBE_URL}
                                         method="post"
-                                        target="ml-submit-frame-44579002"
-                                        onSubmit={(event) => {
-                                            event.preventDefault();
-                                            if (hasAdvanced.current) return;
-
-                                            // Fallback si el script de MailerLite no pudo interceptar el envío.
-                                            HTMLFormElement.prototype.submit.call(event.currentTarget);
-                                            hasAdvanced.current = true;
-                                            useCalculatorStore.setState({ leadFormCompleted: true });
-                                            nextStep();
-                                        }}
+                                        onSubmitCapture={handleSubmit}
                                     >
                                         <div className="ml-form-formContent">
                                             <div className="ml-form-fieldRow">
@@ -171,7 +202,16 @@ export const LeadForm: React.FC = () => {
                                                         className="form-control"
                                                         name="fields[email]"
                                                         autoComplete="email"
+                                                        readOnly={isSubmitting}
+                                                        aria-invalid={Boolean(emailError)}
+                                                        aria-describedby={emailError ? 'email-validation-error' : undefined}
+                                                        onChange={() => setEmailError('')}
                                                     />
+                                                    {emailError && (
+                                                        <p id="email-validation-error" className="email-validation-error" role="alert">
+                                                            {emailError}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
 
@@ -301,7 +341,9 @@ export const LeadForm: React.FC = () => {
                                         <input type="hidden" name="ml-submit" value="1" />
 
                                         <div className="ml-form-embedSubmit">
-                                            <button type="submit" className="primary">Ir al análisis</button>
+                                            <button type="submit" className="primary" disabled={isSubmitting}>
+                                                {isSubmitting ? 'Validando correo...' : 'Ir al análisis'}
+                                            </button>
                                             <button disabled type="button" className="loading" aria-label="Cargando">
                                                 <span className="ml-form-embedSubmitLoad" />
                                                 <span className="sr-only">Cargando...</span>
@@ -310,13 +352,6 @@ export const LeadForm: React.FC = () => {
 
                                         <input type="hidden" name="anticsrf" value="true" />
                                     </form>
-
-                                    <iframe
-                                        name="ml-submit-frame-44579002"
-                                        title="Envío del formulario"
-                                        className="ml-submit-frame"
-                                        aria-hidden="true"
-                                    />
                                 </div>
 
                                 <div className="ml-form-successBody row-success" style={{ display: 'none' }}>
