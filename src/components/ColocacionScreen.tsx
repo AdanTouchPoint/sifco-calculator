@@ -2,7 +2,7 @@ import React from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import { calculateROI, BMRK_TIEMPO, BMRK_REPR, BMRK_ABAN } from '../lib/calculations';
 import './colocacionscreen.css';
-import backgroundImg from '../assets/backgroundImg.png';
+import backgroundImg from '../assets/backgroundImgOpt.png';
 
 const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
 const formatNumber = (value: number, decimals: number = 0) => new Intl.NumberFormat('en-US', { maximumFractionDigits: decimals }).format(value);

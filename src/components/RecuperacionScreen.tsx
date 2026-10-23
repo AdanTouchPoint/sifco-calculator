@@ -2,7 +2,7 @@ import React from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import { calculateROI, MEJ_REC, MEJ_MORA, MEJ_COB, MEJ_ERR, MEJ_CAST } from '../lib/calculations';
 import './recuperacionscreen.css';
-import backgroundImg from '../assets/backgroundImg.png';
+import backgroundImg from '../assets/backgroundImgOpt.png';
 
 const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
 const formatPercent = (value: number) => new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 1 }).format(value);
