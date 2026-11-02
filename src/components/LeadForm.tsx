@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { calculateROI } from '../lib/calculations';
+import { saveCalculatorSubmission, type CalculatorSubmissionPayload } from '../lib/saveCalculatorSubmission';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
 import './leadform.css';
 
@@ -12,11 +14,13 @@ export const LeadForm: React.FC = () => {
     const nextStep = useCalculatorStore((state) => state.nextStep);
     const hasAdvanced = useRef(false);
     const validationInProgress = useRef(false);
+    const pendingSubmission = useRef<{ submissionId: string; submittedAt: string } | null>(null);
     const [contactPreference, setContactPreference] = useState('');
     const [areaCode, setAreaCode] = useState('');
     const [phone, setPhone] = useState('');
     const [implementationDeadline, setImplementationDeadline] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [submissionError, setSubmissionError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const wantsContact = contactPreference.startsWith('Sí');
@@ -34,6 +38,8 @@ export const LeadForm: React.FC = () => {
 
     const handleContactPreferenceChange = (value: string) => {
         setContactPreference(value);
+        pendingSubmission.current = null;
+        setSubmissionError('');
 
         if (!value.startsWith('Sí')) {
             setAreaCode('');
@@ -57,19 +63,30 @@ export const LeadForm: React.FC = () => {
         const email = emailInput?.value.trim() ?? '';
         if (!email) return;
 
+        // FormData omite controles deshabilitados, así que se captura antes de iniciar el envío.
+        const formData = new FormData(form);
+        const marketingConsent = form.querySelector<HTMLInputElement>('input[type="checkbox"]')?.checked ?? false;
+
         validationInProgress.current = true;
         setEmailError('');
+        setSubmissionError('');
         setIsSubmitting(true);
 
         try {
             const query = new URLSearchParams({ email, bussiness_email: 'true' });
-            const response = await fetch(`${EMAIL_VALIDATOR_URL}?${query.toString()}`);
-            if (!response.ok) throw new Error('Email validation request failed');
+            let validation: { success?: unknown; message?: unknown } | undefined;
+            try {
+                const response = await fetch(`${EMAIL_VALIDATOR_URL}?${query.toString()}`);
+                if (!response.ok) throw new Error('Email validation request failed');
 
-            const result: unknown = await response.json();
-            const validation = Array.isArray(result)
-                ? result[0] as { success?: unknown; message?: unknown } | undefined
-                : undefined;
+                const result: unknown = await response.json();
+                validation = Array.isArray(result)
+                    ? result[0] as { success?: unknown; message?: unknown } | undefined
+                    : undefined;
+            } catch {
+                setEmailError('No pudimos validar el correo. Inténtalo de nuevo.');
+                return;
+            }
 
             if (validation?.success !== true) {
                 setEmailError(
@@ -80,24 +97,84 @@ export const LeadForm: React.FC = () => {
                 return;
             }
 
+            const state = useCalculatorStore.getState();
+            const answers = {
+                solicitudesMes: state.solicitudesMes,
+                porcentajeAprobado: state.porcentajeAprobado,
+                montoTicket: state.montoTicket,
+                tiempoAprobacion: state.tiempoAprobacion,
+                tiempoDesembolso: state.tiempoDesembolso,
+                numAnalistas: state.numAnalistas,
+                salarioAnalista: state.salarioAnalista,
+                horasLaboralesMes: state.horasLaboralesMes,
+                porcentajeAbandono: state.porcentajeAbandono,
+                porcentajeReprocesos: state.porcentajeReprocesos,
+                porcentajeManual: state.porcentajeManual,
+                sistemasActuales: state.sistemasActuales,
+                saldoCarteraActiva: state.saldoCarteraActiva,
+                porcentajeMoraNPL: state.porcentajeMoraNPL,
+                diasAtrasoPromedio: state.diasAtrasoPromedio,
+                porcentajeRecuperacion: state.porcentajeRecuperacion,
+                costoMensualCobranza: state.costoMensualCobranza,
+                porcentajeGestionesManuales: state.porcentajeGestionesManuales,
+                porcentajePagosManuales: state.porcentajePagosManuales,
+                porcentajeErroresAplicacion: state.porcentajeErroresAplicacion,
+                porcentajeWriteOffAnual: state.porcentajeWriteOffAnual,
+            };
+            const contactPreferenceValue = String(formData.get('fields[te_gustaria_ser_contactado]') ?? '');
+            const wantsContact = contactPreferenceValue.startsWith('Sí');
+            const submission = pendingSubmission.current ?? {
+                submissionId: globalThis.crypto?.randomUUID?.()
+                    ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
+                submittedAt: new Date().toISOString(),
+            };
+            pendingSubmission.current = submission;
+
+            const payload: CalculatorSubmissionPayload = {
+                schemaVersion: 1,
+                ...submission,
+                source: 'sifco-roi-calculator',
+                contact: {
+                    firstName: String(formData.get('fields[name]') ?? '').trim(),
+                    lastName: String(formData.get('fields[last_name]') ?? '').trim(),
+                    email,
+                    contactPreference: contactPreferenceValue,
+                    areaCode: wantsContact ? String(formData.get('fields[codigo_de_area]') ?? '') : null,
+                    phone: wantsContact ? String(formData.get('fields[phone]') ?? '').trim() : null,
+                    implementationDeadline: wantsContact
+                        ? String(formData.get('fields[plazo_deseado_de_implementacion]') ?? '')
+                        : null,
+                    marketingConsent,
+                },
+                answers,
+                results: calculateROI(state),
+            };
+
+            await saveCalculatorSubmission(payload);
+
             const body = new URLSearchParams();
-            new FormData(form).forEach((value, key) => {
+            formData.forEach((value, key) => {
                 if (typeof value === 'string') body.append(key, value);
             });
 
             // Respuesta opaca (no-cors): no se puede leer si MailerLite aceptó el registro, solo que la petición salió.
-            await fetch(MAILERLITE_SUBSCRIBE_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body,
-            });
+            try {
+                await fetch(MAILERLITE_SUBSCRIBE_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body,
+                });
+            } catch {
+                setSubmissionError('Tus respuestas ya se guardaron, pero no pudimos enviar el formulario de correo. Inténtalo de nuevo.');
+                return;
+            }
 
             if (hasAdvanced.current) return;
             hasAdvanced.current = true;
             useCalculatorStore.setState({ leadFormCompleted: true });
             nextStep();
         } catch {
-            setEmailError('No pudimos completar el envío. Inténtalo de nuevo.');
+            setSubmissionError('No pudimos guardar tus respuestas. Tus datos siguen aquí; inténtalo de nuevo.');
         } finally {
             validationInProgress.current = false;
             setIsSubmitting(false);
@@ -160,6 +237,10 @@ export const LeadForm: React.FC = () => {
                                         action={MAILERLITE_SUBSCRIBE_URL}
                                         method="post"
                                         onSubmitCapture={handleSubmit}
+                                        onChangeCapture={() => {
+                                            pendingSubmission.current = null;
+                                            setSubmissionError('');
+                                        }}
                                     >
                                         <div className="ml-form-formContent">
                                             <div className="ml-form-fieldRow">
@@ -172,6 +253,7 @@ export const LeadForm: React.FC = () => {
                                                         className="form-control"
                                                         name="fields[name]"
                                                         autoComplete="given-name"
+                                                        disabled={isSubmitting}
                                                     />
                                                 </div>
                                             </div>
@@ -186,6 +268,7 @@ export const LeadForm: React.FC = () => {
                                                         className="form-control"
                                                         name="fields[last_name]"
                                                         autoComplete="family-name"
+                                                        disabled={isSubmitting}
                                                     />
                                                 </div>
                                             </div>
@@ -226,6 +309,7 @@ export const LeadForm: React.FC = () => {
                                                         aria-required="true"
                                                         required
                                                         value={contactPreference}
+                                                        disabled={isSubmitting}
                                                         onChange={(event) => handleContactPreferenceChange(event.target.value)}
                                                     >
                                                         <option value="">-</option>
@@ -249,7 +333,7 @@ export const LeadForm: React.FC = () => {
                                                         aria-label="codigo_de_area"
                                                         aria-required={wantsContact}
                                                         required={wantsContact}
-                                                        disabled={!wantsContact}
+                                                        disabled={!wantsContact || isSubmitting}
                                                         value={areaCode}
                                                         onChange={(event) => setAreaCode(event.target.value)}
                                                     >
@@ -290,7 +374,7 @@ export const LeadForm: React.FC = () => {
                                                         autoComplete="tel"
                                                         aria-required={wantsContact}
                                                         required={wantsContact}
-                                                        disabled={!wantsContact}
+                                                        disabled={!wantsContact || isSubmitting}
                                                         value={phone}
                                                         onChange={(event) => setPhone(event.target.value)}
                                                     />
@@ -307,7 +391,7 @@ export const LeadForm: React.FC = () => {
                                                         aria-label="plazo_deseado_de_implementacion"
                                                         aria-required={wantsContact}
                                                         required={wantsContact}
-                                                        disabled={!wantsContact}
+                                                        disabled={!wantsContact || isSubmitting}
                                                         value={implementationDeadline}
                                                         onChange={(event) => setImplementationDeadline(event.target.value)}
                                                     >
@@ -331,24 +415,34 @@ export const LeadForm: React.FC = () => {
 
                                         <div className="ml-form-checkboxRow ml-validate-required">
                                             <label className="checkbox">
-                                                <input type="checkbox" required aria-required="true" />
+                                                <input type="checkbox" required aria-required="true" disabled={isSubmitting} />
                                                 <span className="label-description">
                                                     <span>Acepto recibir noticias, novedades y actualizaciones por correo electrónico</span>
                                                 </span>
                                             </label>
                                         </div>
 
+                                        <p className="sifco-lead-storage-notice">
+                                            Al enviar este formulario, SIFCO guardará tus respuestas y datos de contacto para registrar este diagnóstico.
+                                        </p>
+
                                         <input type="hidden" name="ml-submit" value="1" />
 
                                         <div className="ml-form-embedSubmit">
                                             <button type="submit" className="primary" disabled={isSubmitting}>
-                                                {isSubmitting ? 'Validando correo...' : 'Ir al análisis'}
+                                                {isSubmitting ? 'Guardando tus respuestas...' : 'Ir al análisis'}
                                             </button>
                                             <button disabled type="button" className="loading" aria-label="Cargando">
                                                 <span className="ml-form-embedSubmitLoad" />
                                                 <span className="sr-only">Cargando...</span>
                                             </button>
                                         </div>
+
+                                        {submissionError && (
+                                            <p className="submission-error" role="alert">
+                                                {submissionError}
+                                            </p>
+                                        )}
 
                                         <input type="hidden" name="anticsrf" value="true" />
                                     </form>
