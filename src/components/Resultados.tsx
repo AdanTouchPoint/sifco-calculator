@@ -13,8 +13,6 @@ const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style
 export const Resultados: React.FC = () => {
     const state = useCalculatorStore();
     const resetCalculator = state.resetCalculator;
-    const leadFormCompleted = state.leadFormCompleted;
-    const goToStep = state.goToStep;
 
     const results = calculateROI(state);
     const [downloading, setDownloading] = useState(false);
@@ -97,25 +95,14 @@ export const Resultados: React.FC = () => {
 
                     {/* Enlaces Secundarios */}
                     <div className="sifco-res-links-row">
-                        {leadFormCompleted ? (
-                            <button
-                                type="button"
-                                className="sifco-res-link"
-                                onClick={handleDownload}
-                                disabled={downloading}
-                            >
-                                {downloading ? '⏳ Generando PDF...' : '⬇ Descargar reporte PDF'}
-                            </button>
-                        ) : (
-                            <button
-                                type="button"
-                                className="sifco-res-link sifco-res-link-disabled"
-                                title="Llena el formulario para descargar tu reporte"
-                                onClick={() => goToStep(9)}
-                            >
-                                Descargar reporte PDF 🔒
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            className="sifco-res-link"
+                            onClick={handleDownload}
+                            disabled={downloading}
+                        >
+                            {downloading ? '⏳ Generando PDF...' : '⬇ Descargar reporte PDF'}
+                        </button>
                         <a href="https://wa.me/50230338255?text=quiero%20agendar%20una%20sesi%C3%B3n%20de%20consultor%C3%ADa" className="sifco-res-link">Hablar con un asesor</a>
                     </div>
 

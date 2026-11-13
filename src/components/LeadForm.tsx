@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { calculateROI } from '../lib/calculations';
-import { saveCalculatorSubmission, type CalculatorSubmissionPayload } from '../lib/saveCalculatorSubmission';
-import { useCalculatorStore } from '../lib/useCalculatorStore';
+import { createSubmissionId } from '../lib/saveCalculatorSubmission';
+import { useCalculatorStore, type LeadContact } from '../lib/useCalculatorStore';
 import './leadform.css';
 
 const MAILERLITE_SCRIPT = 'https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519';
@@ -10,15 +9,18 @@ const MAILERLITE_SUBSCRIBE_URL = 'https://assets.mailerlite.com/jsonp/2500316/fo
 const EMAIL_VALIDATOR_URL = 'https://n8n-n8n.n4k6yy.easypanel.host/webhook/email-phone-validator';
 
 export const LeadForm: React.FC = () => {
-    const goToStep = useCalculatorStore((state) => state.goToStep);
+    const lead = useCalculatorStore((state) => state.lead);
+    const setLead = useCalculatorStore((state) => state.setLead);
+    const setLeadSentEmail = useCalculatorStore((state) => state.setLeadSentEmail);
+    const setSubmissionId = useCalculatorStore((state) => state.setSubmissionId);
     const nextStep = useCalculatorStore((state) => state.nextStep);
-    const hasAdvanced = useRef(false);
+    const resetCalculator = useCalculatorStore((state) => state.resetCalculator);
+
     const validationInProgress = useRef(false);
-    const pendingSubmission = useRef<{ submissionId: string; submittedAt: string } | null>(null);
-    const [contactPreference, setContactPreference] = useState('');
-    const [areaCode, setAreaCode] = useState('');
-    const [phone, setPhone] = useState('');
-    const [implementationDeadline, setImplementationDeadline] = useState('');
+    const [contactPreference, setContactPreference] = useState(lead.contactPreference);
+    const [areaCode, setAreaCode] = useState(lead.areaCode);
+    const [phone, setPhone] = useState(lead.phone);
+    const [implementationDeadline, setImplementationDeadline] = useState(lead.implementationDeadline);
     const [emailError, setEmailError] = useState('');
     const [submissionError, setSubmissionError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,12 +35,14 @@ export const LeadForm: React.FC = () => {
             document.body.appendChild(script);
         }
 
-        void fetch(MAILERLITE_TRACKING_URL).catch(() => undefined);
+        // Solo cuenta como visita nueva si aún no se envió un correo en esta visita.
+        if (!useCalculatorStore.getState().leadSentEmail) {
+            void fetch(MAILERLITE_TRACKING_URL).catch(() => undefined);
+        }
     }, []);
 
     const handleContactPreferenceChange = (value: string) => {
         setContactPreference(value);
-        pendingSubmission.current = null;
         setSubmissionError('');
 
         if (!value.startsWith('Sí')) {
@@ -48,24 +52,39 @@ export const LeadForm: React.FC = () => {
         }
     };
 
-    const handleSkip = () => {
-        goToStep(0);
+    // Cerrar el formulario limpia todo y regresa a la portada.
+    const handleClose = () => {
+        resetCalculator();
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         // Se cancela el submit nativo y se detiene la propagación para que el script de MailerLite no procese el formulario.
         event.preventDefault();
         event.stopPropagation();
-        if (hasAdvanced.current || validationInProgress.current) return;
+        if (validationInProgress.current) return;
 
         const form = event.currentTarget;
-        const emailInput = form.querySelector<HTMLInputElement>('#ml-email-44579002');
-        const email = emailInput?.value.trim() ?? '';
-        if (!email) return;
-
         // FormData omite controles deshabilitados, así que se captura antes de iniciar el envío.
         const formData = new FormData(form);
+        const email = String(formData.get('fields[email]') ?? '').trim();
+        if (!email) return;
+
+        const contactPreferenceValue = String(formData.get('fields[te_gustaria_ser_contactado]') ?? '');
+        const wantsContactValue = contactPreferenceValue.startsWith('Sí');
         const marketingConsent = form.querySelector<HTMLInputElement>('input[type="checkbox"]')?.checked ?? false;
+
+        const nextLead: LeadContact = {
+            firstName: String(formData.get('fields[name]') ?? '').trim(),
+            lastName: String(formData.get('fields[last_name]') ?? '').trim(),
+            email,
+            contactPreference: contactPreferenceValue,
+            areaCode: wantsContactValue ? String(formData.get('fields[codigo_de_area]') ?? '') : '',
+            phone: wantsContactValue ? String(formData.get('fields[phone]') ?? '').trim() : '',
+            implementationDeadline: wantsContactValue
+                ? String(formData.get('fields[plazo_deseado_de_implementacion]') ?? '')
+                : '',
+            marketingConsent,
+        };
 
         validationInProgress.current = true;
         setEmailError('');
@@ -73,108 +92,62 @@ export const LeadForm: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            const query = new URLSearchParams({ email, bussiness_email: 'true' });
-            let validation: { success?: unknown; message?: unknown } | undefined;
-            try {
-                const response = await fetch(`${EMAIL_VALIDATOR_URL}?${query.toString()}`);
-                if (!response.ok) throw new Error('Email validation request failed');
+            const alreadySent = useCalculatorStore.getState().leadSentEmail === email;
 
-                const result: unknown = await response.json();
-                validation = Array.isArray(result)
-                    ? result[0] as { success?: unknown; message?: unknown } | undefined
-                    : undefined;
-            } catch {
-                setEmailError('No pudimos validar el correo. Inténtalo de nuevo.');
-                return;
-            }
+            // Si el correo ya se envió en esta visita (el usuario volvió desde el diagnóstico), no se repite.
+            if (!alreadySent) {
+                const query = new URLSearchParams({ email, bussiness_email: 'true' });
+                let validation: { success?: unknown; message?: unknown } | undefined;
+                try {
+                    const response = await fetch(`${EMAIL_VALIDATOR_URL}?${query.toString()}`);
+                    if (!response.ok) throw new Error('Email validation request failed');
 
-            if (validation?.success !== true) {
-                setEmailError(
-                    typeof validation?.message === 'string'
-                        ? validation.message
-                        : 'Ingresa un correo empresarial para continuar.',
-                );
-                return;
-            }
+                    const result: unknown = await response.json();
+                    validation = Array.isArray(result)
+                        ? result[0] as { success?: unknown; message?: unknown } | undefined
+                        : undefined;
+                } catch {
+                    setEmailError('No pudimos validar el correo. Inténtalo de nuevo.');
+                    return;
+                }
 
-            const state = useCalculatorStore.getState();
-            const answers = {
-                solicitudesMes: state.solicitudesMes,
-                porcentajeAprobado: state.porcentajeAprobado,
-                montoTicket: state.montoTicket,
-                tiempoAprobacion: state.tiempoAprobacion,
-                tiempoDesembolso: state.tiempoDesembolso,
-                numAnalistas: state.numAnalistas,
-                salarioAnalista: state.salarioAnalista,
-                horasLaboralesMes: state.horasLaboralesMes,
-                porcentajeAbandono: state.porcentajeAbandono,
-                porcentajeReprocesos: state.porcentajeReprocesos,
-                porcentajeManual: state.porcentajeManual,
-                sistemasActuales: state.sistemasActuales,
-                saldoCarteraActiva: state.saldoCarteraActiva,
-                porcentajeMoraNPL: state.porcentajeMoraNPL,
-                diasAtrasoPromedio: state.diasAtrasoPromedio,
-                porcentajeRecuperacion: state.porcentajeRecuperacion,
-                costoMensualCobranza: state.costoMensualCobranza,
-                porcentajeGestionesManuales: state.porcentajeGestionesManuales,
-                porcentajePagosManuales: state.porcentajePagosManuales,
-                porcentajeErroresAplicacion: state.porcentajeErroresAplicacion,
-                porcentajeWriteOffAnual: state.porcentajeWriteOffAnual,
-            };
-            const contactPreferenceValue = String(formData.get('fields[te_gustaria_ser_contactado]') ?? '');
-            const wantsContact = contactPreferenceValue.startsWith('Sí');
-            const submission = pendingSubmission.current ?? {
-                submissionId: globalThis.crypto?.randomUUID?.()
-                    ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
-                submittedAt: new Date().toISOString(),
-            };
-            pendingSubmission.current = submission;
+                if (validation?.success !== true) {
+                    setEmailError(
+                        typeof validation?.message === 'string'
+                            ? validation.message
+                            : 'Ingresa un correo empresarial para continuar.',
+                    );
+                    return;
+                }
 
-            const payload: CalculatorSubmissionPayload = {
-                schemaVersion: 1,
-                ...submission,
-                source: 'sifco-roi-calculator',
-                contact: {
-                    firstName: String(formData.get('fields[name]') ?? '').trim(),
-                    lastName: String(formData.get('fields[last_name]') ?? '').trim(),
-                    email,
-                    contactPreference: contactPreferenceValue,
-                    areaCode: wantsContact ? String(formData.get('fields[codigo_de_area]') ?? '') : null,
-                    phone: wantsContact ? String(formData.get('fields[phone]') ?? '').trim() : null,
-                    implementationDeadline: wantsContact
-                        ? String(formData.get('fields[plazo_deseado_de_implementacion]') ?? '')
-                        : null,
-                    marketingConsent,
-                },
-                answers,
-                results: calculateROI(state),
-            };
-
-            await saveCalculatorSubmission(payload);
-
-            const body = new URLSearchParams();
-            formData.forEach((value, key) => {
-                if (typeof value === 'string') body.append(key, value);
-            });
-
-            // Respuesta opaca (no-cors): no se puede leer si MailerLite aceptó el registro, solo que la petición salió.
-            try {
-                await fetch(MAILERLITE_SUBSCRIBE_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body,
+                const body = new URLSearchParams();
+                formData.forEach((value, key) => {
+                    if (typeof value === 'string') body.append(key, value);
                 });
-            } catch {
-                setSubmissionError('Tus respuestas ya se guardaron, pero no pudimos enviar el formulario de correo. Inténtalo de nuevo.');
-                return;
+
+                // Respuesta opaca (no-cors): no se puede leer si MailerLite aceptó el registro, solo que la petición salió.
+                try {
+                    await fetch(MAILERLITE_SUBSCRIBE_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body,
+                    });
+                } catch {
+                    setSubmissionError('No pudimos enviar tus datos. Inténtalo de nuevo.');
+                    return;
+                }
+
+                setLeadSentEmail(email);
             }
 
-            if (hasAdvanced.current) return;
-            hasAdvanced.current = true;
-            useCalculatorStore.setState({ leadFormCompleted: true });
+            // Nueva visita: el ID se crea una sola vez; si el usuario regresa, se conserva.
+            if (!useCalculatorStore.getState().submissionId) {
+                setSubmissionId(createSubmissionId());
+            }
+            setLead(nextLead);
             nextStep();
         } catch {
-            setSubmissionError('No pudimos guardar tus respuestas. Tus datos siguen aquí; inténtalo de nuevo.');
+            setSubmissionError('No pudimos continuar. Inténtalo de nuevo.');
         } finally {
             validationInProgress.current = false;
             setIsSubmitting(false);
@@ -187,9 +160,9 @@ export const LeadForm: React.FC = () => {
                 <button
                     type="button"
                     className="sifco-lead-close-btn"
-                    onClick={handleSkip}
-                    title="Cerrar y ver resultados"
-                    aria-label="Cerrar y ver resultados"
+                    onClick={handleClose}
+                    title="Cerrar y volver al inicio"
+                    aria-label="Cerrar y volver al inicio"
                 >
                     ✕
                 </button>
@@ -215,13 +188,13 @@ export const LeadForm: React.FC = () => {
 
                 <div className="sifco-lead-content">
                     <h1 className="sifco-lead-title">
-                        ¡Tu <span className="sifco-lead-text-highlight">Diagnóstico de Eficiencia Financiera</span> está listo!
+                        Comienza tu <span className="sifco-lead-text-highlight">Diagnóstico de Eficiencia Financiera</span>
                     </h1>
                     <p className="sifco-lead-subtitle">
-                        Hemos analizado tus datos operativos frente a los estándares de optimización de SIFCO.
+                        Ingresa tus datos para iniciar el análisis de eficiencia financiera de tu operación.
                     </p>
                     <p className="sifco-lead-description">
-                        Para enviarte el Informe de Rentabilidad completo con tu proyección de ahorro mensual y el plan de escalabilidad para tu equipo, por favor ingresa tu correo corporativo.
+                        Al final del recorrido te enviaremos el Informe de Rentabilidad completo con tu proyección de ahorro mensual y el plan de escalabilidad para tu equipo, a tu correo corporativo.
                     </p>
                 </div>
 
@@ -237,10 +210,7 @@ export const LeadForm: React.FC = () => {
                                         action={MAILERLITE_SUBSCRIBE_URL}
                                         method="post"
                                         onSubmitCapture={handleSubmit}
-                                        onChangeCapture={() => {
-                                            pendingSubmission.current = null;
-                                            setSubmissionError('');
-                                        }}
+                                        onChangeCapture={() => setSubmissionError('')}
                                     >
                                         <div className="ml-form-formContent">
                                             <div className="ml-form-fieldRow">
@@ -253,6 +223,7 @@ export const LeadForm: React.FC = () => {
                                                         className="form-control"
                                                         name="fields[name]"
                                                         autoComplete="given-name"
+                                                        defaultValue={lead.firstName}
                                                         disabled={isSubmitting}
                                                     />
                                                 </div>
@@ -268,6 +239,7 @@ export const LeadForm: React.FC = () => {
                                                         className="form-control"
                                                         name="fields[last_name]"
                                                         autoComplete="family-name"
+                                                        defaultValue={lead.lastName}
                                                         disabled={isSubmitting}
                                                     />
                                                 </div>
@@ -285,6 +257,7 @@ export const LeadForm: React.FC = () => {
                                                         className="form-control"
                                                         name="fields[email]"
                                                         autoComplete="email"
+                                                        defaultValue={lead.email}
                                                         readOnly={isSubmitting}
                                                         aria-invalid={Boolean(emailError)}
                                                         aria-describedby={emailError ? 'email-validation-error' : undefined}
@@ -415,7 +388,13 @@ export const LeadForm: React.FC = () => {
 
                                         <div className="ml-form-checkboxRow ml-validate-required">
                                             <label className="checkbox">
-                                                <input type="checkbox" required aria-required="true" disabled={isSubmitting} />
+                                                <input
+                                                    type="checkbox"
+                                                    required
+                                                    aria-required="true"
+                                                    defaultChecked={lead.marketingConsent}
+                                                    disabled={isSubmitting}
+                                                />
                                                 <span className="label-description">
                                                     <span>Acepto recibir noticias, novedades y actualizaciones por correo electrónico</span>
                                                 </span>
@@ -423,14 +402,14 @@ export const LeadForm: React.FC = () => {
                                         </div>
 
                                         <p className="sifco-lead-storage-notice">
-                                            Al enviar este formulario, SIFCO guardará tus respuestas y datos de contacto para registrar este diagnóstico.
+                                            Al comenzar, SIFCO guardará tus datos de contacto. Tus respuestas se registrarán al generar tu diagnóstico.
                                         </p>
 
                                         <input type="hidden" name="ml-submit" value="1" />
 
                                         <div className="ml-form-embedSubmit">
                                             <button type="submit" className="primary" disabled={isSubmitting}>
-                                                {isSubmitting ? 'Guardando tus respuestas...' : 'Ir al análisis'}
+                                                {isSubmitting ? 'Enviando...' : 'Comenzar'}
                                             </button>
                                             <button disabled type="button" className="loading" aria-label="Cargando">
                                                 <span className="ml-form-embedSubmitLoad" />
@@ -461,9 +440,9 @@ export const LeadForm: React.FC = () => {
 
                 <footer className="sifco-lead-footer">
                     <p className="sifco-lead-disclaimer">
-                        Al registrarte, avanzarás al dashboard de resultados y recibirás una copia en tu bandeja de entrada.{' '}
+                        Al comenzar, recibirás una copia del informe en tu bandeja de entrada.{' '}
                         Si decides no hacerlo, puedes{' '}
-                        <button type="button" className="sifco-lead-close-link" onClick={handleSkip}>
+                        <button type="button" className="sifco-lead-close-link" onClick={handleClose}>
                             cerrar esta ventana
                         </button>{' '}
                         en cualquier momento.

@@ -2,7 +2,7 @@
 // Ejecutar con: node --experimental-strip-types src/test-parity.ts
 
 import { calculateROI } from './lib/calculations.ts';
-import type { CalculatorState } from './lib/useCalculatorStore.ts';
+import { EMPTY_LEAD, type CalculatorState } from './lib/useCalculatorStore.ts';
 
 // =============================================================
 // IMPLEMENTACIÓN CAUPDATE.HTML (réplica literal de showResults)
@@ -165,16 +165,19 @@ function buildState(i: CaUpdateInputs): CalculatorState {
         porcentajePagosManuales: i.manual_pag * 100,
         porcentajeErroresAplicacion: i.error_pag * 100,
         porcentajeWriteOffAnual: i.provision_pct * 100,
-        email: '',
+        lead: EMPTY_LEAD,
+        leadSentEmail: '',
+        submissionId: '',
         empresa: '',
-        leadFormCompleted: false,
+        setLead: () => {},
+        setLeadSentEmail: () => {},
+        setSubmissionId: () => {},
+        setEmpresa: () => {},
         setFieldValue: () => {},
         nextStep: () => {},
         prevStep: () => {},
         goToStep: () => {},
         resetCalculator: () => {},
-        setEmail: () => {},
-        setEmpresa: () => {},
     };
 }
 

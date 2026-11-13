@@ -1,4 +1,4 @@
-import type { CalculationResults } from './calculations';
+import { calculateROI, type CalculationResults } from './calculations';
 import type { CalculatorState } from './useCalculatorStore';
 
 export type CalculatorAnswers = Pick<
@@ -43,6 +43,58 @@ export interface CalculatorSubmissionPayload {
     };
     answers: CalculatorAnswers;
     results: CalculationResults;
+}
+
+export function createSubmissionId(): string {
+    return globalThis.crypto?.randomUUID?.()
+        ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+}
+
+// Arma el payload con los datos de contacto (paso inicial) y las respuestas/resultados actuales.
+export function buildCalculatorSubmissionPayload(state: CalculatorState): CalculatorSubmissionPayload {
+    const { lead } = state;
+    const wantsContact = lead.contactPreference.startsWith('Sí');
+
+    return {
+        schemaVersion: 1,
+        submissionId: state.submissionId || createSubmissionId(),
+        submittedAt: new Date().toISOString(),
+        source: 'sifco-roi-calculator',
+        contact: {
+            firstName: lead.firstName.trim(),
+            lastName: lead.lastName.trim(),
+            email: lead.email,
+            contactPreference: lead.contactPreference,
+            areaCode: wantsContact ? lead.areaCode : null,
+            phone: wantsContact ? lead.phone.trim() : null,
+            implementationDeadline: wantsContact ? lead.implementationDeadline : null,
+            marketingConsent: lead.marketingConsent,
+        },
+        answers: {
+            solicitudesMes: state.solicitudesMes,
+            porcentajeAprobado: state.porcentajeAprobado,
+            montoTicket: state.montoTicket,
+            tiempoAprobacion: state.tiempoAprobacion,
+            tiempoDesembolso: state.tiempoDesembolso,
+            numAnalistas: state.numAnalistas,
+            salarioAnalista: state.salarioAnalista,
+            horasLaboralesMes: state.horasLaboralesMes,
+            porcentajeAbandono: state.porcentajeAbandono,
+            porcentajeReprocesos: state.porcentajeReprocesos,
+            porcentajeManual: state.porcentajeManual,
+            sistemasActuales: state.sistemasActuales,
+            saldoCarteraActiva: state.saldoCarteraActiva,
+            porcentajeMoraNPL: state.porcentajeMoraNPL,
+            diasAtrasoPromedio: state.diasAtrasoPromedio,
+            porcentajeRecuperacion: state.porcentajeRecuperacion,
+            costoMensualCobranza: state.costoMensualCobranza,
+            porcentajeGestionesManuales: state.porcentajeGestionesManuales,
+            porcentajePagosManuales: state.porcentajePagosManuales,
+            porcentajeErroresAplicacion: state.porcentajeErroresAplicacion,
+            porcentajeWriteOffAnual: state.porcentajeWriteOffAnual,
+        },
+        results: calculateROI(state),
+    };
 }
 
 export async function saveCalculatorSubmission(payload: CalculatorSubmissionPayload): Promise<void> {

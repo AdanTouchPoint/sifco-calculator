@@ -4,7 +4,11 @@ Este documento describe cómo recibir desde la calculadora las respuestas, los d
 
 ## Qué envía la aplicación
 
-La aplicación llama al webhook únicamente después de que el correo pasa la validación. Si el usuario cierra/omite el formulario, no se guarda ningún registro.
+La aplicación llama al webhook únicamente al pulsar **Generar Diagnóstico** (último paso del cuestionario). Si el usuario cierra la calculadora o no termina de responder, no se envía nada.
+
+El formulario inicial (Nombre, Apellido, Correo, contacto) se envía a MailerLite al pulsar **Comenzar**; esos datos viajan en el mismo JSON de n8n dentro de `contact`. Si el envío a n8n falla, la app muestra los resultados igualmente y el registro no se guarda.
+
+Cada visita tiene un `submissionId` nuevo. Recalcular o cerrar el formulario borra todo y cuenta como visita nueva.
 
 El webhook recibe una petición `POST` con contenido `text/plain;charset=UTF-8`. El cuerpo contiene directamente el JSON con esta estructura, sin una propiedad externa llamada `payload`:
 
@@ -161,11 +165,12 @@ Las variables `VITE_*` quedan visibles en el navegador. La URL del webhook no es
 
 1. Activa el workflow y confirma que el nodo Webhook muestra la Production URL.
 2. Coloca esa URL en `.env.local` y arranca de nuevo la aplicación.
-3. Completa los ocho pasos y el formulario con un correo empresarial válido.
-4. Comprueba que aparece una fila en `Respuestas ROI` con contacto, respuestas y ROI.
-5. Reintenta un envío fallido y confirma que el mismo `submissionId` no crea una segunda fila.
-6. Prueba una nueva ejecución y confirma que sí agrega una nueva fila.
-7. Omite el formulario y confirma que no se llama al webhook.
+3. Completa el formulario inicial con un correo empresarial válido y pulsa **Comenzar**.
+4. Completa los ocho pasos y pulsa **Generar Diagnóstico**.
+5. Comprueba que aparece una fila en `Respuestas ROI` con contacto, respuestas y ROI.
+6. Vuelve atrás desde los pasos, cambia un valor y genera de nuevo: confirma que el mismo `submissionId` actualiza la fila en lugar de crear otra.
+7. Pulsa **Recalcular** (o cierra el formulario) y repite: confirma que sí agrega una nueva fila.
+8. Cierra el formulario sin pulsar Comenzar, o no llegues a Generar Diagnóstico, y confirma que no se llama al webhook.
 
 La hoja maestra se puede descargar desde Google Sheets como Excel `.xlsx` o CSV.
 

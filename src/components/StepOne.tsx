@@ -96,7 +96,7 @@ export const StepOne: React.FC = () => {
                     {/* BOTONES DE NAVEGACIÓN */}
                     <div className="sifco-step-navigation">
                         <button onClick={prevStep} type="button" className="sifco-step-btn sifco-step-btn-back">
-                            ← Inicio
+                            ← Atrás
                         </button>
                         <button onClick={nextStep} type="button" className="sifco-step-btn sifco-step-btn-next">
                             <span>Siguiente</span>

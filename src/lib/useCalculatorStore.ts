@@ -1,10 +1,33 @@
 import { create } from 'zustand';
 
+// Datos de contacto capturados en el formulario inicial (paso 1).
+export interface LeadContact {
+    firstName: string;
+    lastName: string;
+    email: string;
+    contactPreference: string;
+    areaCode: string;
+    phone: string;
+    implementationDeadline: string;
+    marketingConsent: boolean;
+}
+
+export const EMPTY_LEAD: LeadContact = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    contactPreference: '',
+    areaCode: '',
+    phone: '',
+    implementationDeadline: '',
+    marketingConsent: false,
+};
+
 export interface CalculatorState {
-    // Navigation: 
-    // 0 = Landing, 1 = HowItWorks
-    // 2 a 9 = Pasos del Formulario (1 al 8)
-    // 10 = Resultados, 11 = Thank You
+    // Navigation:
+    // 0 = Portada, 1 = Formulario de contacto (Comenzar)
+    // 2 a 9 = Pasos del diagnóstico (1 al 8)
+    // 10 = Resultados
     currentStep: number;
 
     // Datos Paso 1
@@ -37,19 +60,31 @@ export interface CalculatorState {
     porcentajeErroresAplicacion: number;
     porcentajeWriteOffAnual: number;
 
-    // Datos de contacto (Lead capture)
-    email: string;
+    // Datos de contacto (formulario inicial)
+    lead: LeadContact;
+    // Correo ya enviado a MailerLite en esta visita (evita reenviarlo al volver al formulario).
+    leadSentEmail: string;
+    // Identificador de la visita para n8n. Se crea al pulsar "Comenzar" y se borra al reiniciar.
+    submissionId: string;
     empresa: string;
-    leadFormCompleted: boolean;
-    setEmail: (email: string) => void;
+    setLead: (lead: Partial<LeadContact>) => void;
+    setLeadSentEmail: (email: string) => void;
+    setSubmissionId: (id: string) => void;
     setEmpresa: (empresa: string) => void;
 
-    setFieldValue: (field: keyof Omit<CalculatorState, 'setFieldValue' | 'nextStep' | 'prevStep' | 'goToStep' | 'currentStep' | 'resetCalculator' | 'email' | 'empresa' | 'setEmail' | 'setEmpresa' | 'leadFormCompleted'>, value: number) => void;
+    setFieldValue: (field: Exclude<NumericFieldKey, 'currentStep'>, value: number) => void;
     nextStep: () => void;
     prevStep: () => void;
     goToStep: (step: number) => void;
     resetCalculator: () => void;
 }
+
+// Claves de CalculatorState cuyo valor es numérico.
+type NumericFieldKey = {
+    [K in keyof CalculatorState]: CalculatorState[K] extends number ? K : never;
+}[keyof CalculatorState];
+
+const LAST_STEP = 10;
 
 export const useCalculatorStore = create<CalculatorState>((set) => ({
     currentStep: 0,
@@ -82,18 +117,20 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     porcentajeErroresAplicacion: 5,
     porcentajeWriteOffAnual: 3,
 
-    // Lead Form
-    email: '',
+    // Lead (formulario inicial)
+    lead: EMPTY_LEAD,
+    leadSentEmail: '',
+    submissionId: '',
     empresa: '',
-    leadFormCompleted: false,
-    setEmail: (email) => set({ email }),
+    setLead: (lead) => set((state) => ({ lead: { ...state.lead, ...lead } })),
+    setLeadSentEmail: (leadSentEmail) => set({ leadSentEmail }),
+    setSubmissionId: (submissionId) => set({ submissionId }),
     setEmpresa: (empresa) => set({ empresa }),
 
     setFieldValue: (field, value) => set({ [field]: value }),
 
-    // El tope ahora es 11 (La pantalla de Thank You)
     nextStep: () => set((state) => ({
-        currentStep: state.currentStep < 11 ? state.currentStep + 1 : state.currentStep
+        currentStep: state.currentStep < LAST_STEP ? state.currentStep + 1 : state.currentStep
     })),
 
     // Retrocede sin bajar de 0
@@ -104,7 +141,7 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
     // Navega a un paso específico
     goToStep: (step) => set({ currentStep: step }),
 
-    // Reinicia toda la calculadora a sus valores por defecto
+    // Reinicia toda la calculadora a sus valores por defecto (nueva visita)
     resetCalculator: () => set({
         currentStep: 0,
         solicitudesMes: 150,
@@ -128,8 +165,9 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
         porcentajePagosManuales: 70,
         porcentajeErroresAplicacion: 5,
         porcentajeWriteOffAnual: 3,
-        email: '',
+        lead: EMPTY_LEAD,
+        leadSentEmail: '',
+        submissionId: '',
         empresa: '',
-        leadFormCompleted: false,
     }),
 }));

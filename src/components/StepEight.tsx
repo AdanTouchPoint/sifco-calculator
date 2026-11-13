@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
+import { buildCalculatorSubmissionPayload, saveCalculatorSubmission } from '../lib/saveCalculatorSubmission';
 import './calculatorsteps.css';
 
 export const StepPayments: React.FC = () => {
@@ -12,6 +13,23 @@ export const StepPayments: React.FC = () => {
     const setFieldValue = useCalculatorStore((state) => state.setFieldValue);
     const nextStep = useCalculatorStore((state) => state.nextStep);
     const prevStep = useCalculatorStore((state) => state.prevStep);
+    const [isGenerating, setIsGenerating] = useState(false);
+
+    // Aquí, y solo aquí, se envían los datos y respuestas a n8n.
+    // Si el envío falla, igual se muestran los resultados.
+    const handleGenerate = async () => {
+        if (isGenerating) return;
+        setIsGenerating(true);
+        try {
+            const payload = buildCalculatorSubmissionPayload(useCalculatorStore.getState());
+            await saveCalculatorSubmission(payload);
+        } catch (error) {
+            console.error('No se pudo guardar el diagnóstico en n8n:', error);
+        } finally {
+            setIsGenerating(false);
+            nextStep();
+        }
+    };
 
     return (
         <div className="sifco-step-wrapper">
@@ -130,10 +148,11 @@ export const StepPayments: React.FC = () => {
                         <button
                             type="button"
                             className="sifco-step-btn sifco-step-btn-next sifco-step-btn-submit"
-                            onClick={nextStep}
+                            onClick={handleGenerate}
+                            disabled={isGenerating}
                             style={{ backgroundColor: '#F5A623', borderColor: '#F5A623' }}
                         >
-                            <span>Generar Diagnóstico →</span>
+                            <span>{isGenerating ? 'Generando diagnóstico...' : 'Generar Diagnóstico →'}</span>
                         </button>
                     </div>
 

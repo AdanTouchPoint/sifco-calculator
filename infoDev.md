@@ -47,19 +47,19 @@ Documentación técnica y de estado del proyecto para la Calculadora de ROI de S
 
 | Paso | Componente          | Bloque lógico                                  |
 |------|---------------------|-----------------------------------------------|
-| 0    | `Welcome`           | Landing + explicación (incluye `HowItWorks`)  |
-| 1    | `StepOne`           | Volumen (solicitudes, aprobación, ticket)     |
-| 2    | `StepTwo`           | Tiempos (aprobación, desembolso)              |
-| 3    | `StepThree`         | Equipo (analistas, salario, horas)            |
-| 4    | `StepFour`          | Ineficiencias (abandono, reprocesos)          |
-| 5    | `StepFive`          | Automatización (% manual, sistemas)           |
-| 6    | `StepSix`           | Cartera (saldo, mora NPL, días atraso)        |
-| 7    | `StepSeven`         | Cobranza (recuperación, costo, % manual)      |
-| 8    | `StepEight`         | Pagos (% manual, errores, write-off anual)    |
-| 9    | `LeadForm`          | Formulario MailerLite (lead capture)          |
+| 0    | `Welcome`           | Portada + explicación (incluye `HowItWorks`)  |
+| 1    | `LeadForm`          | Formulario de contacto (botón Comenzar, MailerLite) |
+| 2    | `StepOne`           | Volumen (solicitudes, aprobación, ticket)     |
+| 3    | `StepTwo`           | Tiempos (aprobación, desembolso)              |
+| 4    | `StepThree`         | Equipo (analistas, salario, horas)            |
+| 5    | `StepFour`          | Ineficiencias (abandono, reprocesos)          |
+| 6    | `StepFive`          | Automatización (% manual, sistemas)           |
+| 7    | `StepSix`           | Cartera (saldo, mora NPL, días atraso)        |
+| 8    | `StepSeven`         | Cobranza (recuperación, costo, % manual)      |
+| 9    | `StepEight`         | Pagos (% manual, errores, write-off); "Generar Diagnóstico" envía a n8n |
 | 10   | `Resultados`        | Dashboard con Colocación + Recuperación       |
 
-`App.tsx` decide qué componente renderizar leyendo `currentStep` del store; no usa React Router. El botón ✕ y "Cerrar" del formulario devuelven al paso `0` con `goToStep(0)`.
+`App.tsx` decide qué componente renderizar leyendo `currentStep` del store; no usa React Router. El ✕ y "cerrar esta ventana" del formulario ejecutan `resetCalculator()`, que limpia todo y regresa a la portada (paso `0`). "Recalcular" hace lo mismo.
 
 ### 3.2 Cálculo del ROI
 
@@ -84,12 +84,14 @@ Indicadores semáforo (alto / medio / bajo) se calculan con umbrales fijos sobre
 
 ### 3.4 Captura de leads con MailerLite
 
-- El componente `LeadForm` (`src/components/LeadForm.tsx`) inyecta dinámicamente el Universal Script de MailerLite al montarse.
-- Inicializa `window.ml` con cola (`ml.q = []`) y registra la cuenta `2500316` antes de cargar el script, tal como exige MailerLite.
-- Carga `https://assets.mailerlite.com/js/universal.js` con `async = true`.
-- El contenedor `<div className="ml-embedded" data-form="JWNBqM" />` es donde MailerLite inyecta su formulario.
-- Un `MutationObserver` observa cambios en ese contenedor; cuando aparece `.row-success` o `.ml-form-successBody`, marca `leadFormCompleted: true` en el store y llama `nextStep()`.
-- El botón "Descargar PDF" en `Resultados` está condicionado a `leadFormCompleted`: si no se envió el lead, el botón redirige a `goToStep(9)`.
+- `LeadForm` (paso 1) se muestra antes de la primera pregunta. Al pulsar **Comenzar**:
+  1. Valida el correo con el validador de n8n (`email-phone-validator`).
+  2. Envía los datos a MailerLite (`subscribe`, cuenta `2500316`, form `195092090283099181`). Si el correo ya se envió en esta visita (`leadSentEmail`), no se repite.
+  3. Guarda los datos en el store (`lead`), crea el `submissionId` si no existe y avanza al paso 2.
+- Los datos de contacto no se envían a n8n en este punto. Viajan en el JSON final (`contact`) al pulsar **Generar Diagnóstico** en `StepEight.tsx`, mediante `buildCalculatorSubmissionPayload` y `saveCalculatorSubmission`.
+- Si ese envío falla, se registra en consola y se avanza igual a `Resultados`.
+- El tracking de MailerLite (`takel`) se dispara al montar el formulario solo si aún no se envió un correo en la visita.
+- El botón "Descargar PDF" en `Resultados` ya no tiene bloqueo: el lead se captura antes del diagnóstico.
 
 ## 4. Cómo hacer cambios comunes
 
