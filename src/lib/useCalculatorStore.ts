@@ -30,7 +30,8 @@ export interface CalculatorState {
     // 0 = Portada, 1 = Formulario de contacto (Comenzar)
     // 2 a 9 = Pasos del diagnóstico (1 al 8)
     // 10 = Resultados
-    // El tráfico META (channel === 'meta') salta el paso 1: 0 -> 2 y 2 -> 0.
+    // El tráfico META (channel === 'meta') no ve la portada ni el formulario: inicia en el paso 2
+    // (primera pregunta) y desde ahí no puede retroceder.
     currentStep: number;
 
     // Canal de adquisición detectado en la URL al cargar. resetCalculator no lo modifica.
@@ -91,10 +92,16 @@ type NumericFieldKey = {
 }[keyof CalculatorState];
 
 const LAST_STEP = 10;
+const QUESTIONNAIRE_START_STEP = 2;
+
+// Canal detectado una sola vez al cargar la app (la URL no cambia durante la visita).
+const initialChannel = detectTrafficChannel();
+// Paso inicial y de reinicio: META entra directo a la primera pregunta; el resto, a la portada.
+const entryStep = (channel: TrafficChannel) => (channel === 'meta' ? QUESTIONNAIRE_START_STEP : 0);
 
 export const useCalculatorStore = create<CalculatorState>((set) => ({
-    currentStep: 0,
-    channel: detectTrafficChannel(),
+    currentStep: entryStep(initialChannel),
+    channel: initialChannel,
     solicitudesMes: 150,
     porcentajeAprobado: 40,
     montoTicket: 3000,
@@ -136,29 +143,22 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
 
     setFieldValue: (field, value) => set({ [field]: value }),
 
-    nextStep: () => set((state) => {
-        // META: de la portada directo al primer paso, sin pasar por el formulario.
-        if (state.channel === 'meta' && state.currentStep === 0) {
-            return { currentStep: 2 };
-        }
-        return { currentStep: state.currentStep < LAST_STEP ? state.currentStep + 1 : state.currentStep };
-    }),
+    nextStep: () => set((state) => ({
+        currentStep: state.currentStep < LAST_STEP ? state.currentStep + 1 : state.currentStep
+    })),
 
-    // Retrocede sin bajar de 0
+    // Retrocede sin bajar de 0 (META no baja del primer paso: no tiene portada ni formulario a dónde volver)
     prevStep: () => set((state) => {
-        // META: desde el primer paso se regresa a la portada, no al formulario.
-        if (state.channel === 'meta' && state.currentStep === 2) {
-            return { currentStep: 0 };
-        }
-        return { currentStep: state.currentStep > 0 ? state.currentStep - 1 : state.currentStep };
+        const floor = entryStep(state.channel);
+        return { currentStep: state.currentStep > floor ? state.currentStep - 1 : state.currentStep };
     }),
 
     // Navega a un paso específico
     goToStep: (step) => set({ currentStep: step }),
 
     // Reinicia toda la calculadora a sus valores por defecto (nueva visita)
-    resetCalculator: () => set({
-        currentStep: 0,
+    resetCalculator: () => set((state) => ({
+        currentStep: entryStep(state.channel),
         solicitudesMes: 150,
         porcentajeAprobado: 40,
         montoTicket: 3000,
@@ -184,5 +184,5 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
         leadSentEmail: '',
         submissionId: '',
         empresa: '',
-    }),
+    })),
 }));

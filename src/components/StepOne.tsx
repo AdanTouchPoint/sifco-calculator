@@ -11,6 +11,7 @@ export const StepOne: React.FC = () => {
     // 3. Traes el control de navegación
     const nextStep = useCalculatorStore((state) => state.nextStep);
     const prevStep = useCalculatorStore((state) => state.prevStep);
+    const isMeta = useCalculatorStore((state) => state.channel === 'meta');
 
     return (
         <div className="sifco-step-wrapper">
@@ -95,7 +96,15 @@ export const StepOne: React.FC = () => {
 
                     {/* BOTONES DE NAVEGACIÓN */}
                     <div className="sifco-step-navigation">
-                        <button onClick={prevStep} type="button" className="sifco-step-btn sifco-step-btn-back">
+                        {/* META entra directo aquí: no hay portada ni formulario a dónde regresar. */}
+                        <button
+                            onClick={prevStep}
+                            type="button"
+                            className="sifco-step-btn sifco-step-btn-back"
+                            style={isMeta ? { visibility: 'hidden' } : undefined}
+                            aria-hidden={isMeta}
+                            tabIndex={isMeta ? -1 : undefined}
+                        >
                             ← Atrás
                         </button>
                         <button onClick={nextStep} type="button" className="sifco-step-btn sifco-step-btn-next">
