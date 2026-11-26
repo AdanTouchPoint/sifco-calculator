@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCalculatorStore } from '../lib/useCalculatorStore';
-import { buildCalculatorSubmissionPayload, saveCalculatorSubmission } from '../lib/saveCalculatorSubmission';
+import { buildCalculatorSubmissionPayload, createSubmissionId, saveCalculatorSubmission } from '../lib/saveCalculatorSubmission';
 import './calculatorsteps.css';
 
 export const StepPayments: React.FC = () => {
@@ -21,6 +21,11 @@ export const StepPayments: React.FC = () => {
         if (isGenerating) return;
         setIsGenerating(true);
         try {
+            // El tráfico META no pasa por el formulario (que es quien crea el ID): se crea aquí una sola vez
+            // para que regenerar el diagnóstico actualice la misma fila.
+            if (!useCalculatorStore.getState().submissionId) {
+                useCalculatorStore.getState().setSubmissionId(createSubmissionId());
+            }
             const payload = buildCalculatorSubmissionPayload(useCalculatorStore.getState());
             await saveCalculatorSubmission(payload);
         } catch (error) {

@@ -165,6 +165,7 @@ function buildState(i: CaUpdateInputs): CalculatorState {
         porcentajePagosManuales: i.manual_pag * 100,
         porcentajeErroresAplicacion: i.error_pag * 100,
         porcentajeWriteOffAnual: i.provision_pct * 100,
+        channel: 'directo',
         lead: EMPTY_LEAD,
         leadSentEmail: '',
         submissionId: '',

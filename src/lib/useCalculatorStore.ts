@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+// Con extensión .ts para que test-parity.ts siga corriendo con node --experimental-strip-types.
+import { detectTrafficChannel, type TrafficChannel } from './trafficSource.ts';
 
 // Datos de contacto capturados en el formulario inicial (paso 1).
 export interface LeadContact {
@@ -28,7 +30,12 @@ export interface CalculatorState {
     // 0 = Portada, 1 = Formulario de contacto (Comenzar)
     // 2 a 9 = Pasos del diagnóstico (1 al 8)
     // 10 = Resultados
+    // El tráfico META (channel === 'meta') no ve la portada ni el formulario: inicia en el paso 2
+    // (primera pregunta) y desde ahí no puede retroceder.
     currentStep: number;
+
+    // Canal de adquisición detectado en la URL al cargar. resetCalculator no lo modifica.
+    channel: TrafficChannel;
 
     // Datos Paso 1
     solicitudesMes: number;
@@ -85,9 +92,16 @@ type NumericFieldKey = {
 }[keyof CalculatorState];
 
 const LAST_STEP = 10;
+const QUESTIONNAIRE_START_STEP = 2;
+
+// Canal detectado una sola vez al cargar la app (la URL no cambia durante la visita).
+const initialChannel = detectTrafficChannel();
+// Paso inicial y de reinicio: META entra directo a la primera pregunta; el resto, a la portada.
+const entryStep = (channel: TrafficChannel) => (channel === 'meta' ? QUESTIONNAIRE_START_STEP : 0);
 
 export const useCalculatorStore = create<CalculatorState>((set) => ({
-    currentStep: 0,
+    currentStep: entryStep(initialChannel),
+    channel: initialChannel,
     solicitudesMes: 150,
     porcentajeAprobado: 40,
     montoTicket: 3000,
@@ -133,17 +147,18 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
         currentStep: state.currentStep < LAST_STEP ? state.currentStep + 1 : state.currentStep
     })),
 
-    // Retrocede sin bajar de 0
-    prevStep: () => set((state) => ({
-        currentStep: state.currentStep > 0 ? state.currentStep - 1 : state.currentStep
-    })),
+    // Retrocede sin bajar de 0 (META no baja del primer paso: no tiene portada ni formulario a dónde volver)
+    prevStep: () => set((state) => {
+        const floor = entryStep(state.channel);
+        return { currentStep: state.currentStep > floor ? state.currentStep - 1 : state.currentStep };
+    }),
 
     // Navega a un paso específico
     goToStep: (step) => set({ currentStep: step }),
 
     // Reinicia toda la calculadora a sus valores por defecto (nueva visita)
-    resetCalculator: () => set({
-        currentStep: 0,
+    resetCalculator: () => set((state) => ({
+        currentStep: entryStep(state.channel),
         solicitudesMes: 150,
         porcentajeAprobado: 40,
         montoTicket: 3000,
@@ -169,5 +184,5 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
         leadSentEmail: '',
         submissionId: '',
         empresa: '',
-    }),
+    })),
 }));

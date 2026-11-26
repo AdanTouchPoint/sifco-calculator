@@ -1,5 +1,6 @@
 import { calculateROI, type CalculationResults } from './calculations';
 import type { CalculatorState } from './useCalculatorStore';
+import type { TrafficChannel } from './trafficSource';
 
 export type CalculatorAnswers = Pick<
     CalculatorState,
@@ -31,6 +32,8 @@ export interface CalculatorSubmissionPayload {
     submissionId: string;
     submittedAt: string;
     source: 'sifco-roi-calculator';
+    // Canal de adquisición: 'meta' (campañas, sin formulario de contacto) o 'directo'.
+    channel: TrafficChannel;
     contact: {
         firstName: string;
         lastName: string;
@@ -60,6 +63,7 @@ export function buildCalculatorSubmissionPayload(state: CalculatorState): Calcul
         submissionId: state.submissionId || createSubmissionId(),
         submittedAt: new Date().toISOString(),
         source: 'sifco-roi-calculator',
+        channel: state.channel,
         contact: {
             firstName: lead.firstName.trim(),
             lastName: lead.lastName.trim(),

@@ -18,6 +18,7 @@ El webhook recibe una petición `POST` con contenido `text/plain;charset=UTF-8`.
   "submissionId": "identificador-unico-del-envio",
   "submittedAt": "2026-10-29T12:34:56.000Z",
   "source": "sifco-roi-calculator",
+  "channel": "directo",
   "contact": {
     "firstName": "Nombre",
     "lastName": "Apellido",
@@ -39,6 +40,8 @@ El webhook recibe una petición `POST` con contenido `text/plain;charset=UTF-8`.
   }
 }
 ```
+
+`channel` indica el canal de adquisición: `"meta"` cuando la URL trae `utm_source=meta|facebook|instagram|fb|ig`, o `"directo"` en cualquier otro caso. El tráfico `meta` se salta el formulario inicial, por lo que `contact.email` llega vacío (`""`) y el workflow solo lo exige cuando `channel` no es `meta`. Esta columna `channel` debe existir en la hoja de Google Sheets (está en `sifco-roi-google-sheets-headers.csv`); si importas el CSV por primera vez ya viene incluida, pero en una hoja existente hay que agregarla a mano.
 
 `answers` incluye todos los campos numéricos de los ocho pasos y `results` incluye todos los valores calculados, no solo los ejemplos abreviados de arriba. Si la persona no desea ser contactada, los campos de teléfono, código de área y plazo se envían como `null`.
 
@@ -89,6 +92,7 @@ if (
   typeof submission.submissionId !== 'string' ||
   typeof submission.submittedAt !== 'string' ||
   typeof submission.contact?.email !== 'string' ||
+  (submission.channel !== 'meta' && !submission.contact.email.trim()) ||
   !submission.answers ||
   !submission.results
 ) {
@@ -101,6 +105,7 @@ const row = {
   submittedAt: submission.submittedAt,
   receivedAt: new Date().toISOString(),
   source: submission.source ?? 'sifco-roi-calculator',
+  channel: submission.channel === 'meta' ? 'meta' : 'directo',
   contact_firstName: submission.contact.firstName ?? '',
   contact_lastName: submission.contact.lastName ?? '',
   contact_email: submission.contact.email,

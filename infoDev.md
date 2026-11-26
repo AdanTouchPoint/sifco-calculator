@@ -93,6 +93,15 @@ Indicadores semáforo (alto / medio / bajo) se calculan con umbrales fijos sobre
 - El tracking de MailerLite (`takel`) se dispara al montar el formulario solo si aún no se envió un correo en la visita.
 - El botón "Descargar PDF" en `Resultados` ya no tiene bloqueo: el lead se captura antes del diagnóstico.
 
+### 3.5 Tráfico de campañas META (salta el formulario)
+
+- Al cargar, `src/lib/trafficSource.ts` lee `utm_source` de la URL. Si vale `meta`, `facebook`, `instagram`, `fb` o `ig` (sin distinguir mayúsculas), el canal es `meta`; en cualquier otro caso es `directo`. Ejemplo de URL de anuncio: `https://<dominio>/?utm_source=meta&utm_campaign=<campaña>`.
+- El canal vive en el store (`channel`) y `resetCalculator` no lo modifica, así que "Recalcular" mantiene el comportamiento META.
+- En `useCalculatorStore.ts`, para `meta` no se muestran ni la portada (paso 0) ni el `LeadForm` (paso 1): la app inicia directo en el paso 2 (primera pregunta) y "Recalcular" regresa ahí. Desde el paso 2 no se puede retroceder (`prevStep` no baja del paso inicial) y `StepOne` oculta el botón "Atrás".
+- Como no hay formulario, el `submissionId` se crea en `StepEight` al pulsar "Generar Diagnóstico" (una sola vez; regenerar actualiza la misma fila).
+- El payload a n8n incluye `channel`. Sin formulario, `contact.email` viaja vacío; el workflow lo acepta solo si `channel === 'meta'`. La hoja de Google Sheets necesita la columna `channel`.
+- Los visitantes META no dejan correo en MailerLite ni en n8n.
+
 ## 4. Cómo hacer cambios comunes
 
 ### 4.1 Cambiar un valor por defecto
