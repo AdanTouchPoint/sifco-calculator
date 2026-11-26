@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+// Con extensión .ts para que test-parity.ts siga corriendo con node --experimental-strip-types.
+import { detectTrafficChannel, type TrafficChannel } from './trafficSource.ts';
 
 // Datos de contacto capturados en el formulario inicial (paso 1).
 export interface LeadContact {
@@ -28,7 +30,11 @@ export interface CalculatorState {
     // 0 = Portada, 1 = Formulario de contacto (Comenzar)
     // 2 a 9 = Pasos del diagnóstico (1 al 8)
     // 10 = Resultados
+    // El tráfico META (channel === 'meta') salta el paso 1: 0 -> 2 y 2 -> 0.
     currentStep: number;
+
+    // Canal de adquisición detectado en la URL al cargar. resetCalculator no lo modifica.
+    channel: TrafficChannel;
 
     // Datos Paso 1
     solicitudesMes: number;
@@ -88,6 +94,7 @@ const LAST_STEP = 10;
 
 export const useCalculatorStore = create<CalculatorState>((set) => ({
     currentStep: 0,
+    channel: detectTrafficChannel(),
     solicitudesMes: 150,
     porcentajeAprobado: 40,
     montoTicket: 3000,
@@ -129,14 +136,22 @@ export const useCalculatorStore = create<CalculatorState>((set) => ({
 
     setFieldValue: (field, value) => set({ [field]: value }),
 
-    nextStep: () => set((state) => ({
-        currentStep: state.currentStep < LAST_STEP ? state.currentStep + 1 : state.currentStep
-    })),
+    nextStep: () => set((state) => {
+        // META: de la portada directo al primer paso, sin pasar por el formulario.
+        if (state.channel === 'meta' && state.currentStep === 0) {
+            return { currentStep: 2 };
+        }
+        return { currentStep: state.currentStep < LAST_STEP ? state.currentStep + 1 : state.currentStep };
+    }),
 
     // Retrocede sin bajar de 0
-    prevStep: () => set((state) => ({
-        currentStep: state.currentStep > 0 ? state.currentStep - 1 : state.currentStep
-    })),
+    prevStep: () => set((state) => {
+        // META: desde el primer paso se regresa a la portada, no al formulario.
+        if (state.channel === 'meta' && state.currentStep === 2) {
+            return { currentStep: 0 };
+        }
+        return { currentStep: state.currentStep > 0 ? state.currentStep - 1 : state.currentStep };
+    }),
 
     // Navega a un paso específico
     goToStep: (step) => set({ currentStep: step }),
